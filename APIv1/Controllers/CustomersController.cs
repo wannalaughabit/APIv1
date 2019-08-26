@@ -20,28 +20,21 @@ namespace APIv1.Controllers
             // variables for web request and looping through JSON Objects
             string html = string.Empty;
             string uri = Authentication.uriRoot + @"customers/";
-            string jsonResultUser = "";                     
-                                  
+            string jsonResultUser = "";
+            int numberOfCustomers = 0;
+
             JObject obj = null;
             CustomerDto customerDto = new CustomerDto();
 
             //variables for DB connection
-            String SQLString;            
+            String SQLString;
             SqlCommand com;
-            int numberOfCustomers = 0;
 
             //open DB connection
-            String connectionString = "Server=localhost; Database = webshop; User Id=root; Password=";
+            String connectionString = @"Server=localhost; Database=webshop; User ID=API; Password=1234";
             DBconnection.conn = new SqlConnection(connectionString);
-            
-            try
-            {
-                DBconnection.conn.Open();
-            }
-            catch (SqlException)
-            {
-               File.WriteAllText("D:\\Test\\DBerror.txt", "Die Datenbankverbindung konnte nicht hergestellt werden.");
-            }
+
+            DBconnection.conn.Open();
 
             //generate web request
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
@@ -74,6 +67,7 @@ namespace APIv1.Controllers
                     jsonResultUser = JsonConvert.SerializeObject(customerDto);                    
                     File.AppendAllText("D:\\Test\\customers.txt", jsonResultUser);
 
+                    
                     //creates DB entry for each Object
                     SQLString = "INSERT INTO customers (customer_id, username, first_name, last_name, email, phone_number, password, " +
                         "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing" +
@@ -82,6 +76,7 @@ namespace APIv1.Controllers
                         "@first_name_billing, @last_name_billing, @company_billing, @address_billing, @city_billing, @post_code_billing, @country_billing, @email_billing" +
                         "@first_name_shipping, @last_name_shipping, @company_shipping, @address_shipping, @city_shipping, @post_code_shipping, @country_shipping, @email_shipping)";
                     com = new SqlCommand(SQLString, DBconnection.conn);
+                    
                     com.Parameters.AddWithValue("@customer_id", customerDto.id);
                     com.Parameters.AddWithValue("@username", customerDto.username);
                     com.Parameters.AddWithValue("@first_name", customerDto.first_name);
@@ -106,13 +101,16 @@ namespace APIv1.Controllers
                     com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
                     com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
                     com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
-                   
 
+                    //com.Connection.Open();
+                    com.Dispose();
                     numberOfCustomers += com.ExecuteNonQuery();
+                    //com.Connection.Close();
 
                 }                
             }
 
+            DBconnection.conn.Close();
             stream.Close();
             response.Close();
 
@@ -126,8 +124,9 @@ namespace APIv1.Controllers
         }
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        public int Post([FromBody]string value)
         {
+            return 200;
         }
 
         // PUT api/<controller>/5
