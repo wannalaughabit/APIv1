@@ -14,11 +14,13 @@ namespace APIv1.Controllers
     public class CustomersController : ApiController
     {
         // GET api/<controller>
-        public string GetCustomers()
+        public JObject GetCustomers()
         {
             string html = string.Empty;
             string uri = Authentication.uriRoot + @"customers/";
-            JObject obj;
+            string jsonResult = "";
+            JObject result = null;            
+            JObject obj = null;
             CustomerDto customerDto = new CustomerDto();
 
 
@@ -48,16 +50,18 @@ namespace APIv1.Controllers
                 if (json.TokenType == JsonToken.StartObject)
                 {
                     obj = JObject.Load(json);
-                    customerDto = new CustomerDto(obj);                    
+                    customerDto = new CustomerDto(obj);
+                    jsonResult = JsonConvert.SerializeObject(customerDto);
+                    File.AppendAllText("D:\\Test\\customers.txt", jsonResult);
                 }                
             }
+
+            result = JObject.Parse(File.ReadAllText("D:\\Test\\customers.txt"));
             
-            string jsonResult = JsonConvert.SerializeObject(customerDto);
-            string result = reader.ReadToEnd();
+
 
             stream.Close();
-            response.Close();
-            File.WriteAllText("D:\\Test\\customers.txt", jsonResult);
+            response.Close();            
             return result;
             
         }
