@@ -79,7 +79,7 @@ namespace APIv1.Controllers
                         "@first_name_shipping, @last_name_shipping, @company_shipping, @address_shipping, @city_shipping, @post_code_shipping, @country_shipping)";
                     com = new MySqlCommand(SQLString, DBconnection.conn);
                     
-                    //com.Parameters.AddWithValue("@customer_id", customerDto.id);
+                    
                     com.Parameters.AddWithValue("@wp_user_id", customerDto.id);
                     com.Parameters.AddWithValue("@username", customerDto.username);
                     com.Parameters.AddWithValue("@first_name", customerDto.first_name);
