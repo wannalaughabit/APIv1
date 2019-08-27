@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace APIv1
 {
     public class DBconnection
     {
-        public static SqlConnection conn;
+        public static MySqlConnection conn;
     }
 }
