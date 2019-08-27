@@ -17,7 +17,7 @@ namespace APIv1.Controllers
     public class CustomersController : ApiController
     {
         // GET api/<controller>
-        public int GetCustomers()
+        public string GetCustomers()
         {
             // variables for web request and looping through JSON Objects
             string html = string.Empty;
@@ -77,8 +77,7 @@ namespace APIv1.Controllers
                         "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone_number, @password, " +
                         "@first_name_billing, @last_name_billing, @company_billing, @address_billing, @city_billing, @post_code_billing, @country_billing, @email_billing," +
                         "@first_name_shipping, @last_name_shipping, @company_shipping, @address_shipping, @city_shipping, @post_code_shipping, @country_shipping)";
-                    com = new MySqlCommand(SQLString, DBconnection.conn);
-                    
+                    com = new MySqlCommand(SQLString, DBconnection.conn);                    
                     
                     com.Parameters.AddWithValue("@wp_user_id", customerDto.id);
                     com.Parameters.AddWithValue("@username", customerDto.username);
@@ -104,11 +103,10 @@ namespace APIv1.Controllers
                     com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
                     com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
                     com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
-
-                    //com.Connection.Open();
+                    
                     com.Dispose();
                     numberOfCustomers += com.ExecuteNonQuery();
-                    //com.Connection.Close();
+                    
 
                 }                
             }
@@ -117,7 +115,8 @@ namespace APIv1.Controllers
             stream.Close();
             response.Close();
 
-            return numberOfCustomers;
+            string returnMessage = numberOfCustomers + " customers were added to the database.";
+            return returnMessage;
         }
 
         // GET api/<controller>/5
