@@ -106,21 +106,12 @@ namespace APIv1.Controllers
                     com.Dispose();
                     
                     numberOfCustomers += com.ExecuteNonQuery();
-<<<<<<< HEAD
-                    
-
-=======
->>>>>>> database
                 }                
             }
 
             DBconnection.conn.Close();
             stream.Close();
             response.Close();
-<<<<<<< HEAD
-
-=======
->>>>>>> database
             string returnMessage = numberOfCustomers + " customers were added to the database.";
             return returnMessage;
         }
