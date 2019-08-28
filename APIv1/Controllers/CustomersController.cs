@@ -68,7 +68,6 @@ namespace APIv1.Controllers
                     customerDto = new CustomerDto(obj);
                     jsonResultUser = JsonConvert.SerializeObject(customerDto);                    
                     File.AppendAllText("D:\\Test\\customers.txt", jsonResultUser);
-
                     
                     //creates DB entry for each Object
                     SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, password, " +
@@ -105,16 +104,23 @@ namespace APIv1.Controllers
                     com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
                     
                     com.Dispose();
+                    
                     numberOfCustomers += com.ExecuteNonQuery();
+<<<<<<< HEAD
                     
 
+=======
+>>>>>>> database
                 }                
             }
 
             DBconnection.conn.Close();
             stream.Close();
             response.Close();
+<<<<<<< HEAD
 
+=======
+>>>>>>> database
             string returnMessage = numberOfCustomers + " customers were added to the database.";
             return returnMessage;
         }
