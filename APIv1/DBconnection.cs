@@ -9,6 +9,28 @@ namespace APIv1
 {
     public class DBconnection
     {
-        public static MySqlConnection conn;
+        public MySqlConnection conn = new MySqlConnection();
+        public MySqlCommand com;
+        public String SQLString;
+        public DBconnection()
+        {
+
+        }
+
+        public void openConnection()
+        {
+            
+            
+            
+            
+
+            //open DB connection
+            String connectionString = @"Server=localhost; Database=webshop; User ID=API; Allow User Variables=True";
+            conn = new MySqlConnection(connectionString);
+
+            conn.Open();
+        }
+        
+        
     }
 }
