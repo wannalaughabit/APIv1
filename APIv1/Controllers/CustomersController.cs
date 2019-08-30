@@ -24,36 +24,14 @@ namespace APIv1.Controllers
             dbConnection.openConnection();
 
             // variables for web request and looping through JSON Objects
-            string html = string.Empty;
-            string uri = Authentication.uriRoot + @"customers/";
+                        
             string jsonResultUser = "";
             int numberOfCustomers = 0;
 
             JObject obj = null;
             CustomerDto customerDto = new CustomerDto();
-
-            
-
-            //generate web request
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            request.Headers.Add("Authorization", "Basic " + Authentication.encoded);
-
-
-            request.Method = "GET";
-            request.ContentType = "application/json";
-
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-
-            // turn off validation of certificates
-            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            Stream stream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(stream);
-
-            // add JsonTextReader to get single JSON objects (customer) from StreamReader
-            JsonTextReader json = new JsonTextReader(reader);
-
+            WebReq request = new WebReq();
+            JsonTextReader json = request.createGetRequest("customers");
 
             //loop through objects to create a CustomerDto for each and pass it to CreateCustomer
             while (json.Read())
@@ -107,8 +85,8 @@ namespace APIv1.Controllers
             }
 
             dbConnection.conn.Close();
-            stream.Close();
-            response.Close();
+            request.stream.Close();
+            request.response.Close();
             string returnMessage = numberOfCustomers + " customers were added to the database.";
             return returnMessage;
         }
