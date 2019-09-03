@@ -105,45 +105,60 @@ namespace APIv1.Controllers
         [Route("api/v1/customers/webshop")]
         public int Post(CustomerDto customerDto)
         {
-            DBconnection dbConnection = new DBconnection();
-            dbConnection.openConnection();
+            try 
+            {
+                DBconnection dbConnection = new DBconnection();
+                dbConnection.openConnection();
 
-            dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, password, " +
-                        "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
-                        "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
-                        "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone_number, @password, " +
-                        "@first_name_billing, @last_name_billing, @company_billing, @address_billing, @city_billing, @post_code_billing, @country_billing, @email_billing," +
-                        "@first_name_shipping, @last_name_shipping, @company_shipping, @address_shipping, @city_shipping, @post_code_shipping, @country_shipping)";
-            dbConnection.com = new MySqlCommand(dbConnection.SQLString, dbConnection.conn);
+                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, password, " +
+                            "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
+                            "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
+                            "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone_number, @password, " +
+                            "@first_name_billing, @last_name_billing, @company_billing, @address_billing, @city_billing, @post_code_billing, @country_billing, @email_billing," +
+                            "@first_name_shipping, @last_name_shipping, @company_shipping, @address_shipping, @city_shipping, @post_code_shipping, @country_shipping)";
+                dbConnection.com = new MySqlCommand(dbConnection.SQLString, dbConnection.conn);
 
-            dbConnection.com.Parameters.AddWithValue("@wp_user_id", customerDto.id);
-            dbConnection.com.Parameters.AddWithValue("@username", customerDto.username);
-            dbConnection.com.Parameters.AddWithValue("@first_name", customerDto.first_name);
-            dbConnection.com.Parameters.AddWithValue("@last_name", customerDto.last_name);
-            dbConnection.com.Parameters.AddWithValue("@email", customerDto.Email);
-            dbConnection.com.Parameters.AddWithValue("@phone_number", customerDto.Email);
-            dbConnection.com.Parameters.AddWithValue("@password", customerDto.Email);
+                dbConnection.com.Parameters.AddWithValue("@wp_user_id", customerDto.id);
+                dbConnection.com.Parameters.AddWithValue("@username", customerDto.username);
+                dbConnection.com.Parameters.AddWithValue("@first_name", customerDto.first_name);
+                dbConnection.com.Parameters.AddWithValue("@last_name", customerDto.last_name);
+                dbConnection.com.Parameters.AddWithValue("@email", customerDto.Email);
+                dbConnection.com.Parameters.AddWithValue("@phone_number", customerDto.Email);
+                dbConnection.com.Parameters.AddWithValue("@password", customerDto.Email);
 
-            dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
-            dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
-            dbConnection.com.Parameters.AddWithValue("@company_billing", customerDto.billing["company"]);
-            dbConnection.com.Parameters.AddWithValue("@address_billing", customerDto.billing["address_1"]);
-            dbConnection.com.Parameters.AddWithValue("@city_billing", customerDto.billing["city"]);
-            dbConnection.com.Parameters.AddWithValue("@post_code_billing", customerDto.billing["postcode"]);
-            dbConnection.com.Parameters.AddWithValue("@country_billing", customerDto.billing["country"]);
-            dbConnection.com.Parameters.AddWithValue("@email_billing", customerDto.billing["email"]);
+                dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
+                dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
+                dbConnection.com.Parameters.AddWithValue("@company_billing", customerDto.billing["company"]);
+                dbConnection.com.Parameters.AddWithValue("@address_billing", customerDto.billing["address_1"]);
+                dbConnection.com.Parameters.AddWithValue("@city_billing", customerDto.billing["city"]);
+                dbConnection.com.Parameters.AddWithValue("@post_code_billing", customerDto.billing["postcode"]);
+                dbConnection.com.Parameters.AddWithValue("@country_billing", customerDto.billing["country"]);
+                dbConnection.com.Parameters.AddWithValue("@email_billing", customerDto.billing["email"]);
 
-            dbConnection.com.Parameters.AddWithValue("@first_name_shipping", customerDto.shipping["first_name"]);
-            dbConnection.com.Parameters.AddWithValue("@last_name_shipping", customerDto.shipping["last_name"]);
-            dbConnection.com.Parameters.AddWithValue("@company_shipping", customerDto.shipping["company"]);
-            dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
-            dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
-            dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
-            dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
+                dbConnection.com.Parameters.AddWithValue("@first_name_shipping", customerDto.shipping["first_name"]);
+                dbConnection.com.Parameters.AddWithValue("@last_name_shipping", customerDto.shipping["last_name"]);
+                dbConnection.com.Parameters.AddWithValue("@company_shipping", customerDto.shipping["company"]);
+                dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
+                dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
+                dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
+                dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
 
-            dbConnection.com.Dispose();
+                dbConnection.com.Dispose();
 
-            dbConnection.com.ExecuteNonQuery();
+                dbConnection.com.ExecuteNonQuery();
+            }
+            catch
+            {
+                if(customerDto.username != null && customerDto.billing == null)
+                {
+                    return 200;
+                }
+
+                else
+                {
+                    return 500;
+                }
+            }
             return 200;
         }
 
