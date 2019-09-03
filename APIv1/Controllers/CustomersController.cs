@@ -41,10 +41,8 @@ namespace APIv1.Controllers
             {
                 if (json.TokenType == JsonToken.StartObject)
                 {
-                    //obj = JObject.Load(json);
-                    customerDto = new CustomerDto(obj);
-                   
-                                        
+                    obj = JObject.Load(json);
+                    customerDto = new CustomerDto(obj);                                        
                     
                     //creates DB entry for each Object                   
                     dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, password, " +
@@ -107,9 +105,11 @@ namespace APIv1.Controllers
         {
             try 
             {
+                //open DB connection
                 DBconnection dbConnection = new DBconnection();
                 dbConnection.openConnection();
 
+                // enter customer into DB
                 dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, password, " +
                             "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
                             "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
@@ -147,6 +147,8 @@ namespace APIv1.Controllers
 
                 dbConnection.com.ExecuteNonQuery();
             }
+
+            // catches test data from webhook in case it's updated or newly created
             catch
             {
                 if(customerDto.username != null && customerDto.billing == null)
