@@ -14,9 +14,12 @@ using System.Web.Http;
 
 namespace APIv1.Controllers
 {
+    
     public class CustomersController : ApiController
     {
         // GET api/<controller>
+        [HttpGet]
+        [Route ("api/v1/customers/webshop")]
         public string GetCustomers()
         {
             //open DBconnection
