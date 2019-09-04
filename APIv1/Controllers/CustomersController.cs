@@ -116,8 +116,7 @@ namespace APIv1.Controllers
         [Route("api/v1/customers/webshop")]
         public int PostCustomerToDatabase(CustomerDto customerDto)
         {
-            try 
-            {
+            
                 //open DB connection
                 DBconnection dbConnection = new DBconnection();
                 dbConnection.openConnection();
@@ -153,28 +152,15 @@ namespace APIv1.Controllers
                 dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
                 dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
                 dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
-                dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
-
-                dbConnection.com.Dispose();
-                dbConnection.conn.Close();
-                
+                dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);                               
 
                 dbConnection.com.ExecuteNonQuery();
-            }
+                dbConnection.com.Dispose();
+                dbConnection.conn.Close();
 
-            // catches test data from webhook in case it's updated or newly created
-            catch
-            {
-                if(customerDto.username != null && customerDto.billing == null)
-                {
-                    return 200;
-                }
 
-                else
-                {
-                    return 500;
-                }
-            }
+            // catches test data from webhook in case it's updated or newly created needs to be implemented
+
             return 200;
         }
 
