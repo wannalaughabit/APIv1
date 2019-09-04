@@ -192,8 +192,8 @@ namespace APIv1.Controllers
                 customer.first_name = dataTableCustomers.Rows[i]["first_name"].ToString();
                 customer.last_name = dataTableCustomers.Rows[i]["last_name"].ToString();
                 customer.email = dataTableCustomers.Rows[i]["email"].ToString();
-                customer.phone_number = dataTableCustomers.Rows[i]["phone_number"].ToString();                
-
+                customer.phone_number = dataTableCustomers.Rows[i]["phone_number"].ToString();
+                
                 try
                 {
                     customer.billing["first_name"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
