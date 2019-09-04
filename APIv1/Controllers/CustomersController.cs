@@ -115,8 +115,7 @@ namespace APIv1.Controllers
         [HttpPost]
         [Route("api/v1/customers/webshop")]
         public int PostCustomerToDatabase(CustomerDto customerDto)
-        {
-            
+        {            
                 //open DB connection
                 DBconnection dbConnection = new DBconnection();
                 dbConnection.openConnection();
@@ -177,7 +176,6 @@ namespace APIv1.Controllers
             CustomerDto customer = new CustomerDto();
             int numberOfCustomers = 0;
 
-
             // open connection to database
             dbConnection.openConnection();
 
@@ -221,18 +219,13 @@ namespace APIv1.Controllers
                     customer.shipping["city"] = dataTableCustomers.Rows[i]["city_shipping"].ToString();
                     customer.shipping["post_code"] = dataTableCustomers.Rows[i]["post_code_shipping"].ToString();
                     customer.shipping["country"] = dataTableCustomers.Rows[i]["country_shipping"].ToString();
-                }                    
-                
+                }               
                 catch
                 {    
                     customer.shipping = null;                    
                 }
-
                 
-                numberOfCustomers += i;
-                
-             
-                
+                numberOfCustomers += i;         
             }
             WebReq request = new WebReq();
             request.createPostRequest(customer, "customers");
