@@ -45,10 +45,10 @@ namespace APIv1.Controllers
                     customerDto = new CustomerDto(obj);                                        
                     
                     //creates DB entry for each Object                   
-                    dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, password, " +
+                    dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number,  " +
                         "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
                         "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
-                        "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone_number, @password, " +
+                        "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone_number, " +
                         "@first_name_billing, @last_name_billing, @company_billing, @address_billing, @city_billing, @post_code_billing, @country_billing, @email_billing," +
                         "@first_name_shipping, @last_name_shipping, @company_shipping, @address_shipping, @city_shipping, @post_code_shipping, @country_shipping)";
                     dbConnection.com = new MySqlCommand(dbConnection.SQLString, dbConnection.conn);                    
@@ -58,8 +58,7 @@ namespace APIv1.Controllers
                     dbConnection.com.Parameters.AddWithValue("@first_name", customerDto.first_name);
                     dbConnection.com.Parameters.AddWithValue("@last_name", customerDto.last_name);
                     dbConnection.com.Parameters.AddWithValue("@email", customerDto.Email);
-                    dbConnection.com.Parameters.AddWithValue("@phone_number", customerDto.Email);
-                    dbConnection.com.Parameters.AddWithValue("@password", customerDto.Email);
+                    dbConnection.com.Parameters.AddWithValue("@phone_number", customerDto.Email);                    
 
                     dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
                     dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
@@ -103,17 +102,16 @@ namespace APIv1.Controllers
         [Route("api/v1/customers/webshop")]
         public int Post(CustomerDto customerDto)
         {
-            try 
-            {
+            
                 //open DB connection
                 DBconnection dbConnection = new DBconnection();
                 dbConnection.openConnection();
 
                 // enter customer into DB
-                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, password, " +
+                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, " +
                             "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
                             "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
-                            "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone_number, @password, " +
+                            "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone_number, " +
                             "@first_name_billing, @last_name_billing, @company_billing, @address_billing, @city_billing, @post_code_billing, @country_billing, @email_billing," +
                             "@first_name_shipping, @last_name_shipping, @company_shipping, @address_shipping, @city_shipping, @post_code_shipping, @country_shipping)";
                 dbConnection.com = new MySqlCommand(dbConnection.SQLString, dbConnection.conn);
@@ -123,8 +121,7 @@ namespace APIv1.Controllers
                 dbConnection.com.Parameters.AddWithValue("@first_name", customerDto.first_name);
                 dbConnection.com.Parameters.AddWithValue("@last_name", customerDto.last_name);
                 dbConnection.com.Parameters.AddWithValue("@email", customerDto.Email);
-                dbConnection.com.Parameters.AddWithValue("@phone_number", customerDto.Email);
-                dbConnection.com.Parameters.AddWithValue("@password", customerDto.Email);
+                dbConnection.com.Parameters.AddWithValue("@phone_number", customerDto.Email);                
 
                 dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
                 dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
@@ -146,21 +143,11 @@ namespace APIv1.Controllers
                 dbConnection.com.Dispose();
 
                 dbConnection.com.ExecuteNonQuery();
-            }
+            
 
-            // catches test data from webhook in case it's updated or newly created
-            catch
-            {
-                if(customerDto.username != null && customerDto.billing == null)
-                {
-                    return 200;
-                }
-
-                else
-                {
-                    return 500;
-                }
-            }
+            // catches test data from webhook in case it's updated or newly created needs to be implemented
+            
+            
             return 200;
         }
 
