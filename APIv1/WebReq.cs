@@ -55,6 +55,7 @@ namespace APIv1
             using (var streamWriter = new StreamWriter(request.GetRequestStream()))
             {
                 string json = JsonConvert.SerializeObject(customerDto);
+                
 
                 streamWriter.Write(json);
                 streamWriter.Flush();

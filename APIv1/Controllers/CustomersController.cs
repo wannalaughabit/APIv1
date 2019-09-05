@@ -174,6 +174,7 @@ namespace APIv1.Controllers
             DataTable dataTableCustomers = new DataTable();
             DBconnection dbConnection = new DBconnection();
             CustomerDto customer = new CustomerDto();
+            WebReq request;
             int numberOfCustomers = 0;
 
             // open connection to database
@@ -187,7 +188,7 @@ namespace APIv1.Controllers
             for (int i = 0; i < dataTableCustomers.Rows.Count; i++)
             {
                 
-                customer.id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
+                //customer.id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
                 customer.username = dataTableCustomers.Rows[i]["username"].ToString();
                 customer.first_name = dataTableCustomers.Rows[i]["first_name"].ToString();
                 customer.last_name = dataTableCustomers.Rows[i]["last_name"].ToString();
@@ -226,11 +227,12 @@ namespace APIv1.Controllers
                 {    
                     customer.shipping = null;                    
                 }
-                
+                request = new WebReq();
+                request.createPostRequest(customer, "customers");
                 numberOfCustomers += i;         
             }
-            WebReq request = new WebReq();
-            request.createPostRequest(customer, "customers");
+            
+            
             dbConnection.conn.Close();
             return numberOfCustomers + " customers were added to the webshop";
         }
