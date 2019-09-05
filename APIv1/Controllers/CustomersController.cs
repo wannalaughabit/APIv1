@@ -229,7 +229,7 @@ namespace APIv1.Controllers
                 }
                 request = new WebReq();
                 request.createPostRequest(customer, "customers");
-                numberOfCustomers += i;         
+                numberOfCustomers += i + 1;         
             }
             
             
