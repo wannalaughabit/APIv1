@@ -24,6 +24,11 @@ namespace APIv1.Controllers
         public string GetCustomers()
         {
             int numberOfCustomers = 0;
+            int NumberOfcustomersAlreadyInDatabase = 0;
+            string IdsOfExistingCustomers = "";
+            string messageExistingCustomers = "";
+            string returnMessage;
+            List<string> exception = new List<string>();
 
             //open DBconnection
             DBconnection dbConnection = new DBconnection();
@@ -35,7 +40,7 @@ namespace APIv1.Controllers
             CustomerDto customerDto;
             WebReq request = new WebReq();
             JsonTextReader json = request.createGetRequest("customers");
-            string returnMessage;
+            
 
             //loop through objects to create a CustomerDto for each and pass it to CreateCustomer
             while (json.Read())
@@ -79,8 +84,18 @@ namespace APIv1.Controllers
                     dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
                     
                     dbConnection.com.Dispose();
-                    
-                    numberOfCustomers += dbConnection.com.ExecuteNonQuery();
+
+                    try
+                    {
+                        numberOfCustomers += dbConnection.com.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {       
+                        // add exception message to list so I can return the IDs of customers already in DB
+                        exception.Add(ex.Message);
+                        NumberOfcustomersAlreadyInDatabase += 1;
+                        continue;
+                    }
                 }                
             }
 
@@ -88,16 +103,37 @@ namespace APIv1.Controllers
             request.stream.Close();
             request.response.Close();            
 
+            //loop through array of exception messages and extract IDs
+            for (int i = 0; i < exception.Count; i++)
+            {
+               IdsOfExistingCustomers = IdsOfExistingCustomers + ", " + string.Join("", exception[i].ToCharArray().Where(Char.IsDigit));                
+            }
+
+            //switch to display correct message for customers already in database
+            switch (exception.Count)
+            {
+                case 0:
+                    messageExistingCustomers = NumberOfcustomersAlreadyInDatabase + " customers with the IDs" + IdsOfExistingCustomers + " were already in the database.";
+                    break;
+                case 1:
+                    messageExistingCustomers = NumberOfcustomersAlreadyInDatabase + " customer with the ID" + IdsOfExistingCustomers + " was already in the database.";
+                    break;
+                default:
+                    messageExistingCustomers = NumberOfcustomersAlreadyInDatabase + " customers with the IDs" + IdsOfExistingCustomers + " were already in the database.";
+                    break;
+            }
+
+            //switch to display correct message
             switch (numberOfCustomers)
             {
                 case 0:
-                    returnMessage= "No customers were added to the database.";
+                    returnMessage = messageExistingCustomers + " No customers were added to the database.";
                     break;
                 case 1:
-                    returnMessage = "One customer was added to the database.";
+                    returnMessage = messageExistingCustomers + NumberOfcustomersAlreadyInDatabase + " customers were already in the database." + "One customer was added to the database.";
                     break;
                 default:
-                    returnMessage = numberOfCustomers + " customers were added to the database.";
+                    returnMessage = messageExistingCustomers + numberOfCustomers + " customers were added to the database.";
                     break;
             }
             
@@ -134,7 +170,7 @@ namespace APIv1.Controllers
                 dbConnection.com.Parameters.AddWithValue("@first_name", customerDto.first_name);
                 dbConnection.com.Parameters.AddWithValue("@last_name", customerDto.last_name);
                 dbConnection.com.Parameters.AddWithValue("@email", customerDto.email);
-                dbConnection.com.Parameters.AddWithValue("@phone_number", customerDto.phone_number);                ;
+                dbConnection.com.Parameters.AddWithValue("@phone_number", customerDto.phone_number);                
 
                 dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
                 dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
@@ -229,10 +265,10 @@ namespace APIv1.Controllers
                 }
                 request = new WebReq();
                 request.createPostRequest(customer, "customers");
-                numberOfCustomers += i + 1;         
+                numberOfCustomers += i;         
             }
-            
-            
+
+            numberOfCustomers += 1;
             dbConnection.conn.Close();
             return numberOfCustomers + " customers were added to the webshop";
         }
