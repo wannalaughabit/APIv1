@@ -27,8 +27,8 @@ namespace APIv1.Data_Transfer_Objects
         [JsonProperty("email")]
         public string email { get; set; }
 
-        [JsonProperty("phone_number")]
-        public string phone_number { get; set; }        
+        [JsonProperty("phone")]
+        public string phone { get; set; }        
 
         [JsonProperty("password")]
         public string password { get; set; }
@@ -55,7 +55,7 @@ namespace APIv1.Data_Transfer_Objects
             last_name = (string)json["last_name"];
             address = (string)json["address"];
             email = (string)json["email"];
-            phone_number = (string)json["phone_number"];            
+            phone = (string)json["phone"];            
             password = (string)json["password"];
             role = (string)json["role"];
             billing = json["billing"].ToObject<Dictionary<string, string>>();
