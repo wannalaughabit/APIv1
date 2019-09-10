@@ -212,6 +212,8 @@ namespace APIv1.Controllers
             CustomerDto customer = new CustomerDto();
             WebReq request;
             int numberOfCustomers = 0;
+            int numberOfCustomersAlreadyInWebshop = 0;
+            string returnMessage;
 
             // open connection to database
             dbConnection.openConnection();
@@ -223,15 +225,24 @@ namespace APIv1.Controllers
 
             for (int i = 0; i < dataTableCustomers.Rows.Count; i++)
             {
-                
+
                 //customer.id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
-                customer.username = dataTableCustomers.Rows[i]["username"].ToString();
-                customer.first_name = dataTableCustomers.Rows[i]["first_name"].ToString();
-                customer.last_name = dataTableCustomers.Rows[i]["last_name"].ToString();
-                customer.email = dataTableCustomers.Rows[i]["email"].ToString();
-                customer.phone = dataTableCustomers.Rows[i]["phone"].ToString();
-                customer.password = dataTableCustomers.Rows[i]["password"].ToString();
-                customer.role = dataTableCustomers.Rows[i]["role"].ToString();
+
+                try
+                {
+                    customer.username = dataTableCustomers.Rows[i]["username"].ToString();
+                    customer.first_name = dataTableCustomers.Rows[i]["first_name"].ToString();
+                    customer.last_name = dataTableCustomers.Rows[i]["last_name"].ToString();
+                    customer.email = dataTableCustomers.Rows[i]["email"].ToString();
+                    customer.phone = dataTableCustomers.Rows[i]["phone"].ToString();
+                    customer.password = dataTableCustomers.Rows[i]["password"].ToString();
+                    customer.role = dataTableCustomers.Rows[i]["role"].ToString();
+                }
+                catch
+                {
+                    numberOfCustomersAlreadyInWebshop += 1;
+                    continue;
+                }
                 
                 try
                 {
@@ -268,9 +279,19 @@ namespace APIv1.Controllers
                 numberOfCustomers += i;         
             }
 
-            numberOfCustomers += 1;
+            
             dbConnection.conn.Close();
-            return numberOfCustomers + " customers were added to the webshop";
+
+            if (numberOfCustomersAlreadyInWebshop > 0)
+            {
+                returnMessage = numberOfCustomers + " customers were added to the webshop and " + numberOfCustomersAlreadyInWebshop + " customers were already in the webshop.";
+            }
+            else
+            {
+                returnMessage = numberOfCustomers + " customers were added to the webshop"; 
+            }
+
+            return returnMessage; 
         }
 
         // POST api/v1/<controller>/update/<source>
