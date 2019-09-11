@@ -19,9 +19,9 @@ namespace APIv1.Controllers
     {
         // GET api/v1/<controller>
         // gets customers from webshop and writes them into database
-        [HttpGet]
+        [HttpPost]
         [Route ("api/v1/customers/webshop")]
-        public string GetCustomers()
+        public string PostCustomers()
         {
             int numberOfCustomers = 0;
             int NumberOfcustomersAlreadyInDatabase = 0;
