@@ -113,7 +113,7 @@ namespace APIv1.Controllers
             switch (exception.Count)
             {
                 case 0:
-                    messageExistingCustomers = NumberOfcustomersAlreadyInDatabase + " customers with the IDs" + IdsOfExistingCustomers + " were already in the database.";
+                    messageExistingCustomers = "";
                     break;
                 case 1:
                     messageExistingCustomers = NumberOfcustomersAlreadyInDatabase + " customer with the ID" + IdsOfExistingCustomers + " was already in the database.";
@@ -140,18 +140,21 @@ namespace APIv1.Controllers
             return returnMessage;
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        // GET api/v1/<controller>/<source>/5
+        [HttpGet]
+        [Route("api/v1/customers/webshop/{id}")]
+        public string GetCustomerFromDatabase(int id)
         {
             return "value";
         }
 
         // POST api/v1/<controller>/<source>
-        // customers created in webshop get sent to database via POST request/webhook
+        // customers created in webshop get sent to database via webhook
         [HttpPost]
         [Route("api/v1/customers/webshop")]
-        public int PostCustomerToDatabase(CustomerDto customerDto)
-        {            
+        public string PostCustomerToDatabase(CustomerDto customerDto)
+        {
+                string returnMessage;
                 //open DB connection
                 DBconnection dbConnection = new DBconnection();
                 dbConnection.openConnection();
@@ -166,7 +169,17 @@ namespace APIv1.Controllers
                 dbConnection.com = new MySqlCommand(dbConnection.SQLString, dbConnection.conn);
 
                 dbConnection.com.Parameters.AddWithValue("@wp_user_id", customerDto.id);
+
+            try
+            {
                 dbConnection.com.Parameters.AddWithValue("@username", customerDto.username);
+            }
+            catch 
+            {
+                returnMessage = "Username already in use. Please choose another one.";
+                return returnMessage;
+            }
+
                 dbConnection.com.Parameters.AddWithValue("@first_name", customerDto.first_name);
                 dbConnection.com.Parameters.AddWithValue("@last_name", customerDto.last_name);
                 dbConnection.com.Parameters.AddWithValue("@email", customerDto.email);
@@ -194,9 +207,9 @@ namespace APIv1.Controllers
                 dbConnection.conn.Close();
 
 
-            // catches test data from webhook in case it's updated or newly created needs to be implemented
+            returnMessage = "Customer was added to the database.";
 
-            return 200;
+            return returnMessage;
         }
 
         // POST api/v1/<controller>/<source>
