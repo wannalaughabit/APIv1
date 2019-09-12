@@ -168,6 +168,7 @@
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\WebshopCustomersController.cs" />
     <Compile Include="Data Transfer Objects\CustomerDto.cs" />
     <Compile Include="DBconnection.cs" />
     <Compile Include="Global.asax.cs">
@@ -268,6 +269,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\WebshopCustomers\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

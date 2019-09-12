@@ -11,142 +11,98 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Text;
 
 namespace APIv1.Controllers
 {
     
     public class CustomersController : ApiController
     {
-        // GET api/v1/<controller>
-        // gets customers from webshop and writes them into database
-        [HttpPost]
-        [Route ("api/v1/customers/webshop")]
-        public string PostCustomers()
-        {
-            int numberOfCustomers = 0;
-            int NumberOfcustomersAlreadyInDatabase = 0;
-            string IdsOfExistingCustomers = "";
-            string messageExistingCustomers = "";
-            string returnMessage;
-            List<string> exception = new List<string>();
 
-            //open DBconnection
-            DBconnection dbConnection = new DBconnection();
-            dbConnection.openConnection();                
-            
-            
-
-            JObject obj = null;
-            CustomerDto customerDto;
-            WebReq request = new WebReq();
-            JsonTextReader json = request.createGetRequest("customers");
-            
-
-            //loop through objects to create a CustomerDto for each and pass it to CreateCustomer
-            while (json.Read())
-            {
-                if (json.TokenType == JsonToken.StartObject)
-                {
-                    obj = JObject.Load(json);
-                    customerDto = new CustomerDto(obj);                                        
-                    
-                    //creates DB entry for each Object                   
-                    dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone, " +
-                        "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
-                        "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
-                        "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone, " +
-                        "@first_name_billing, @last_name_billing, @company_billing, @address_billing, @city_billing, @post_code_billing, @country_billing, @email_billing," +
-                        "@first_name_shipping, @last_name_shipping, @company_shipping, @address_shipping, @city_shipping, @post_code_shipping, @country_shipping)";
-                    dbConnection.com = new MySqlCommand(dbConnection.SQLString, dbConnection.conn);                    
-                    
-                    dbConnection.com.Parameters.AddWithValue("@wp_user_id", customerDto.id);
-                    dbConnection.com.Parameters.AddWithValue("@username", customerDto.username);
-                    dbConnection.com.Parameters.AddWithValue("@first_name", customerDto.first_name);
-                    dbConnection.com.Parameters.AddWithValue("@last_name", customerDto.last_name);
-                    dbConnection.com.Parameters.AddWithValue("@email", customerDto.email);
-                    dbConnection.com.Parameters.AddWithValue("@phone", customerDto.phone);
-                    
-                    dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
-                    dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
-                    dbConnection.com.Parameters.AddWithValue("@company_billing", customerDto.billing["company"]);
-                    dbConnection.com.Parameters.AddWithValue("@address_billing", customerDto.billing["address_1"]);
-                    dbConnection.com.Parameters.AddWithValue("@city_billing", customerDto.billing["city"]);
-                    dbConnection.com.Parameters.AddWithValue("@post_code_billing", customerDto.billing["postcode"]);
-                    dbConnection.com.Parameters.AddWithValue("@country_billing", customerDto.billing["country"]);
-                    dbConnection.com.Parameters.AddWithValue("@email_billing", customerDto.billing["email"]);
-
-                    dbConnection.com.Parameters.AddWithValue("@first_name_shipping", customerDto.shipping["first_name"]);
-                    dbConnection.com.Parameters.AddWithValue("@last_name_shipping", customerDto.shipping["last_name"]);
-                    dbConnection.com.Parameters.AddWithValue("@company_shipping", customerDto.shipping["company"]);
-                    dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
-                    dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
-                    dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
-                    dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
-                    
-                    dbConnection.com.Dispose();
-
-                    try
-                    {
-                        numberOfCustomers += dbConnection.com.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {       
-                        // add exception message to list so I can return the IDs of customers already in DB
-                        exception.Add(ex.Message);
-                        NumberOfcustomersAlreadyInDatabase += 1;
-                        continue;
-                    }
-                }                
-            }
-
-            dbConnection.conn.Close();
-            request.stream.Close();
-            request.response.Close();            
-
-            //loop through array of exception messages and extract IDs
-            for (int i = 0; i < exception.Count; i++)
-            {
-               IdsOfExistingCustomers = IdsOfExistingCustomers + ", " + string.Join("", exception[i].ToCharArray().Where(Char.IsDigit));                
-            }
-
-            //switch to display correct message for customers already in database
-            switch (exception.Count)
-            {
-                case 0:
-                    messageExistingCustomers = "";
-                    break;
-                case 1:
-                    messageExistingCustomers = NumberOfcustomersAlreadyInDatabase + " customer with the ID" + IdsOfExistingCustomers + " was already in the database.";
-                    break;
-                default:
-                    messageExistingCustomers = NumberOfcustomersAlreadyInDatabase + " customers with the IDs" + IdsOfExistingCustomers + " were already in the database.";
-                    break;
-            }
-
-            //switch to display correct message
-            switch (numberOfCustomers)
-            {
-                case 0:
-                    returnMessage = messageExistingCustomers + " No customers were added to the database.";
-                    break;
-                case 1:
-                    returnMessage = messageExistingCustomers + NumberOfcustomersAlreadyInDatabase + " customers were already in the database." + "One customer was added to the database.";
-                    break;
-                default:
-                    returnMessage = messageExistingCustomers + numberOfCustomers + " customers were added to the database.";
-                    break;
-            }
-            
-            return returnMessage;
-        }
 
         // GET api/v1/<controller>/<source>/5
         [HttpGet]
-        [Route("api/v1/customers/webshop/{id}")]
+        [Route("api/v1/customers/{id}")]
         public string GetCustomerFromDatabase(int id)
         {
             return "value";
         }
+
+        //POST api/v1/<controller>
+        //gets customers from POST request and writes them into database
+        [HttpPost]
+        [Route("api/v1/customers")]
+        public List<CustomerDto> PostCustomers([FromBody] JArray content)
+        {
+            
+            int numberOfCustomers = 0;
+            List<int> customersAlreadyInDatabase = new List<int>();
+            
+            List<CustomerDto> customersCreated = new List<CustomerDto>();  
+
+
+            //open DBconnection
+            DBconnection dbConnection = new DBconnection();
+            dbConnection.openConnection();
+
+            foreach (JObject customer in content)
+            {
+                CustomerDto customerDto = new CustomerDto(customer);
+                //creates DB entry for each Object                   
+                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone, " +
+                    "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
+                    "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
+                    "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone, " +
+                    "@first_name_billing, @last_name_billing, @company_billing, @address_billing, @city_billing, @post_code_billing, @country_billing, @email_billing," +
+                    "@first_name_shipping, @last_name_shipping, @company_shipping, @address_shipping, @city_shipping, @post_code_shipping, @country_shipping)";
+                dbConnection.com = new MySqlCommand(dbConnection.SQLString, dbConnection.conn);
+
+                dbConnection.com.Parameters.AddWithValue("@wp_user_id", customerDto.id);
+                dbConnection.com.Parameters.AddWithValue("@username", customerDto.username);
+                dbConnection.com.Parameters.AddWithValue("@first_name", customerDto.first_name);
+                dbConnection.com.Parameters.AddWithValue("@last_name", customerDto.last_name);
+                dbConnection.com.Parameters.AddWithValue("@email", customerDto.email);
+                dbConnection.com.Parameters.AddWithValue("@phone", customerDto.phone);
+
+                dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
+                dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
+                dbConnection.com.Parameters.AddWithValue("@company_billing", customerDto.billing["company"]);
+                dbConnection.com.Parameters.AddWithValue("@address_billing", customerDto.billing["address_1"]);
+                dbConnection.com.Parameters.AddWithValue("@city_billing", customerDto.billing["city"]);
+                dbConnection.com.Parameters.AddWithValue("@post_code_billing", customerDto.billing["postcode"]);
+                dbConnection.com.Parameters.AddWithValue("@country_billing", customerDto.billing["country"]);
+                dbConnection.com.Parameters.AddWithValue("@email_billing", customerDto.billing["email"]);
+
+                dbConnection.com.Parameters.AddWithValue("@first_name_shipping", customerDto.shipping["first_name"]);
+                dbConnection.com.Parameters.AddWithValue("@last_name_shipping", customerDto.shipping["last_name"]);
+                dbConnection.com.Parameters.AddWithValue("@company_shipping", customerDto.shipping["company"]);
+                dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
+                dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
+                dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
+                dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
+
+                //dbConnection.com.Dispose();
+
+                try
+                {
+                    numberOfCustomers += dbConnection.com.ExecuteNonQuery();
+                    customerDto.url = @"http://localhost:51074/api/v1/customers/" + customerDto.id;
+                    customersCreated.Add(customerDto);
+                }
+                catch 
+                {  
+                    continue;
+                }
+
+            }
+            for (int i = 0; i < customersAlreadyInDatabase.Count; i++)
+            {
+                content.RemoveAt(customersAlreadyInDatabase[i]);
+            }
+
+            dbConnection.conn.Close();
+            return customersCreated;
+        }    
 
         // POST api/v1/<controller>/<source>
         // customers created in webshop get sent to database via webhook
@@ -212,18 +168,18 @@ namespace APIv1.Controllers
             return returnMessage;
         }
 
-        // POST api/v1/<controller>/<source>
-        // customers from database get sent to webshop via POST request
-        [HttpPost]
-        [Route("api/v1/customers/database")]
-        public string PostCustomerToWebshop()
+        // GET api/v1/<controller>
+        // GETs customers from database 
+        [HttpGet]
+        [Route("api/v1/customers")]
+        public List<CustomerDto> PostCustomerToWebshop()
         {
             // declare variables
             String SQLString = "SELECT * FROM customers";
             DataTable dataTableCustomers = new DataTable();
             DBconnection dbConnection = new DBconnection();
-            CustomerDto customer = new CustomerDto();
-            WebReq request;
+            
+            List<CustomerDto> customersFromDatabase = new List<CustomerDto>();
             int numberOfCustomers = 0;
             int numberOfCustomersAlreadyInWebshop = 0;
             string returnMessage;
@@ -238,18 +194,19 @@ namespace APIv1.Controllers
 
             for (int i = 0; i < dataTableCustomers.Rows.Count; i++)
             {
-
-                //customer.id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
+                CustomerDto customerDto = new CustomerDto();
+                customerDto.id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
 
                 try
                 {
-                    customer.username = dataTableCustomers.Rows[i]["username"].ToString();
-                    customer.first_name = dataTableCustomers.Rows[i]["first_name"].ToString();
-                    customer.last_name = dataTableCustomers.Rows[i]["last_name"].ToString();
-                    customer.email = dataTableCustomers.Rows[i]["email"].ToString();
-                    customer.phone = dataTableCustomers.Rows[i]["phone"].ToString();
-                    customer.password = dataTableCustomers.Rows[i]["password"].ToString();
-                    customer.role = dataTableCustomers.Rows[i]["role"].ToString();
+                    customerDto.url = "http://localhost/api/v1/customers/" + customerDto.id;
+                    customerDto.username = dataTableCustomers.Rows[i]["username"].ToString();
+                    customerDto.first_name = dataTableCustomers.Rows[i]["first_name"].ToString();
+                    customerDto.last_name = dataTableCustomers.Rows[i]["last_name"].ToString();
+                    customerDto.email = dataTableCustomers.Rows[i]["email"].ToString();
+                    customerDto.phone = dataTableCustomers.Rows[i]["phone"].ToString();
+                    customerDto.password = dataTableCustomers.Rows[i]["password"].ToString();
+                    customerDto.role = dataTableCustomers.Rows[i]["role"].ToString();
                 }
                 catch
                 {
@@ -259,37 +216,38 @@ namespace APIv1.Controllers
                 
                 try
                 {
-                    customer.billing["first_name"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
-                    customer.billing["last_name"] = dataTableCustomers.Rows[i]["last_name_billing"].ToString();
-                    customer.billing["company"] = dataTableCustomers.Rows[i]["company_billing"].ToString();
-                    customer.billing["address"] = dataTableCustomers.Rows[i]["address_billing"].ToString();
-                    customer.billing["city"] = dataTableCustomers.Rows[i]["city_billing"].ToString();
-                    customer.billing["post_code"] = dataTableCustomers.Rows[i]["post_code_billing"].ToString();
-                    customer.billing["country"] = dataTableCustomers.Rows[i]["country_billing"].ToString();
-                    customer.billing["email"] = dataTableCustomers.Rows[i]["email_billing"].ToString();
+                    customerDto.billing["first_name"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                    customerDto.billing["last_name"] = dataTableCustomers.Rows[i]["last_name_billing"].ToString();
+                    customerDto.billing["company"] = dataTableCustomers.Rows[i]["company_billing"].ToString();
+                    customerDto.billing["address"] = dataTableCustomers.Rows[i]["address_billing"].ToString();
+                    customerDto.billing["city"] = dataTableCustomers.Rows[i]["city_billing"].ToString();
+                    customerDto.billing["post_code"] = dataTableCustomers.Rows[i]["post_code_billing"].ToString();
+                    customerDto.billing["country"] = dataTableCustomers.Rows[i]["country_billing"].ToString();
+                    customerDto.billing["email"] = dataTableCustomers.Rows[i]["email_billing"].ToString();
                 }
                 catch
                 {
-                    customer.billing = null;
+                    customerDto.billing = null;
                 }
 
                 try
                 {
-                    customer.shipping["first_name"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
-                    customer.shipping["last_name"] = dataTableCustomers.Rows[i]["last_name_shipping"].ToString();
-                    customer.shipping["company"] = dataTableCustomers.Rows[i]["company_shipping"].ToString();
-                    customer.shipping["address"] = dataTableCustomers.Rows[i]["address_shipping"].ToString();
-                    customer.shipping["city"] = dataTableCustomers.Rows[i]["city_shipping"].ToString();
-                    customer.shipping["post_code"] = dataTableCustomers.Rows[i]["post_code_shipping"].ToString();
-                    customer.shipping["country"] = dataTableCustomers.Rows[i]["country_shipping"].ToString();
+                    customerDto.shipping["first_name"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                    customerDto.shipping["last_name"] = dataTableCustomers.Rows[i]["last_name_shipping"].ToString();
+                    customerDto.shipping["company"] = dataTableCustomers.Rows[i]["company_shipping"].ToString();
+                    customerDto.shipping["address"] = dataTableCustomers.Rows[i]["address_shipping"].ToString();
+                    customerDto.shipping["city"] = dataTableCustomers.Rows[i]["city_shipping"].ToString();
+                    customerDto.shipping["post_code"] = dataTableCustomers.Rows[i]["post_code_shipping"].ToString();
+                    customerDto.shipping["country"] = dataTableCustomers.Rows[i]["country_shipping"].ToString();
                 }               
                 catch
                 {    
-                    customer.shipping = null;                    
+                    customerDto.shipping = null;                    
                 }
-                request = new WebReq();
-                request.createPostRequest(customer, "customers");
-                numberOfCustomers += i;         
+                
+                numberOfCustomers += i;
+                customersFromDatabase.Add(customerDto);
+
             }
 
             
@@ -304,7 +262,7 @@ namespace APIv1.Controllers
                 returnMessage = numberOfCustomers + " customers were added to the webshop"; 
             }
 
-            return returnMessage; 
+            return customersFromDatabase; 
         }
 
         // POST api/v1/<controller>/update/<source>
