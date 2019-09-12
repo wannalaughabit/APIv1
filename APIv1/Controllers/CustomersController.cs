@@ -266,6 +266,7 @@ namespace APIv1.Controllers
         }
 
         // POST api/v1/<controller>/update/<source>
+        // gets post request from webshop when a customer is updated and updates customer in db
         [HttpPost]
         [Route("api/v1/customers/update/webshop")]
         public string UpdateCustomer(CustomerDto customerDto)
@@ -328,6 +329,7 @@ namespace APIv1.Controllers
         }
 
         // DELETE api/v1/<controller>/delete/<source>
+        // gets POST request from webshop when customer is deleted and deletes customer from db
         [HttpPost]
         [Route ("api/v1/customers/delete/webshop")]
         public string DeleteCustomer(CustomerDto customerDto)
