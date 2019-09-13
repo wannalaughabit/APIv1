@@ -18,7 +18,102 @@ namespace APIv1.Controllers
     
     public class CustomersController : ApiController
     {
+        // GET api/v1/<controller>
+        // GETs customers from database 
+        [HttpGet]
+        [Route("api/v1/customers")]
+        public List<CustomerDto> PostCustomerToWebshop()
+        {
+            // declare variables
+            String SQLString = "SELECT * FROM customers";
+            DataTable dataTableCustomers = new DataTable();
+            DBconnection dbConnection = new DBconnection();
 
+            List<CustomerDto> customersFromDatabase = new List<CustomerDto>();
+            int numberOfCustomers = 0;
+            int numberOfCustomersAlreadyInWebshop = 0;
+            string returnMessage;
+
+            // open connection to database
+            dbConnection.openConnection();
+
+            // create data adapter and fill dataTableCustomers with data from data adapter (customer data) 
+            MySqlDataAdapter dataAdapter = new MySqlDataAdapter(SQLString, dbConnection.conn);
+            dataAdapter.Fill(dataTableCustomers);
+
+
+            for (int i = 0; i < dataTableCustomers.Rows.Count; i++)
+            {
+                CustomerDto customerDto = new CustomerDto();
+                customerDto.id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
+
+                try
+                {
+                    customerDto.url = "http://localhost/api/v1/customers/" + customerDto.id;
+                    customerDto.username = dataTableCustomers.Rows[i]["username"].ToString();
+                    customerDto.first_name = dataTableCustomers.Rows[i]["first_name"].ToString();
+                    customerDto.last_name = dataTableCustomers.Rows[i]["last_name"].ToString();
+                    customerDto.email = dataTableCustomers.Rows[i]["email"].ToString();
+                    customerDto.phone = dataTableCustomers.Rows[i]["phone"].ToString();
+                    customerDto.password = dataTableCustomers.Rows[i]["password"].ToString();
+                    customerDto.role = dataTableCustomers.Rows[i]["role"].ToString();
+                }
+                catch
+                {
+                    numberOfCustomersAlreadyInWebshop += 1;
+                    continue;
+                }
+
+                try
+                {
+                    customerDto.billing["first_name"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                    customerDto.billing["last_name"] = dataTableCustomers.Rows[i]["last_name_billing"].ToString();
+                    customerDto.billing["company"] = dataTableCustomers.Rows[i]["company_billing"].ToString();
+                    customerDto.billing["address"] = dataTableCustomers.Rows[i]["address_billing"].ToString();
+                    customerDto.billing["city"] = dataTableCustomers.Rows[i]["city_billing"].ToString();
+                    customerDto.billing["post_code"] = dataTableCustomers.Rows[i]["post_code_billing"].ToString();
+                    customerDto.billing["country"] = dataTableCustomers.Rows[i]["country_billing"].ToString();
+                    customerDto.billing["email"] = dataTableCustomers.Rows[i]["email_billing"].ToString();
+                }
+                catch
+                {
+                    customerDto.billing = null;
+                }
+
+                try
+                {
+                    customerDto.shipping["first_name"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                    customerDto.shipping["last_name"] = dataTableCustomers.Rows[i]["last_name_shipping"].ToString();
+                    customerDto.shipping["company"] = dataTableCustomers.Rows[i]["company_shipping"].ToString();
+                    customerDto.shipping["address"] = dataTableCustomers.Rows[i]["address_shipping"].ToString();
+                    customerDto.shipping["city"] = dataTableCustomers.Rows[i]["city_shipping"].ToString();
+                    customerDto.shipping["post_code"] = dataTableCustomers.Rows[i]["post_code_shipping"].ToString();
+                    customerDto.shipping["country"] = dataTableCustomers.Rows[i]["country_shipping"].ToString();
+                }
+                catch
+                {
+                    customerDto.shipping = null;
+                }
+
+                numberOfCustomers += i;
+                customersFromDatabase.Add(customerDto);
+
+            }
+
+
+            dbConnection.conn.Close();
+
+            if (numberOfCustomersAlreadyInWebshop > 0)
+            {
+                returnMessage = numberOfCustomers + " customers were added to the webshop and " + numberOfCustomersAlreadyInWebshop + " customers were already in the webshop.";
+            }
+            else
+            {
+                returnMessage = numberOfCustomers + " customers were added to the webshop";
+            }
+
+            return customersFromDatabase;
+        }
 
         // GET api/v1/<controller>/<source>/5
         [HttpGet]
@@ -29,7 +124,7 @@ namespace APIv1.Controllers
         }
 
         //POST api/v1/<controller>
-        //gets customers from POST request and writes them into database
+        //processes POST request and writes customers into database
         [HttpPost]
         [Route("api/v1/customers")]
         public List<CustomerDto> PostCustomers([FromBody] JArray content)
@@ -105,7 +200,7 @@ namespace APIv1.Controllers
         }    
 
         // POST api/v1/<controller>/<source>
-        // customers created in webshop get sent to database via webhook
+        // processes post request from webhook and creates customer in database
         [HttpPost]
         [Route("api/v1/customers/webshop")]
         public string PostCustomerToDatabase(CustomerDto customerDto)
@@ -168,105 +263,10 @@ namespace APIv1.Controllers
             return returnMessage;
         }
 
-        // GET api/v1/<controller>
-        // GETs customers from database 
-        [HttpGet]
-        [Route("api/v1/customers")]
-        public List<CustomerDto> PostCustomerToWebshop()
-        {
-            // declare variables
-            String SQLString = "SELECT * FROM customers";
-            DataTable dataTableCustomers = new DataTable();
-            DBconnection dbConnection = new DBconnection();
-            
-            List<CustomerDto> customersFromDatabase = new List<CustomerDto>();
-            int numberOfCustomers = 0;
-            int numberOfCustomersAlreadyInWebshop = 0;
-            string returnMessage;
-
-            // open connection to database
-            dbConnection.openConnection();
-
-            // create data adapter and fill dataTableCustomers with data from data adapter (customer data) 
-            MySqlDataAdapter dataAdapter = new MySqlDataAdapter(SQLString, dbConnection.conn);
-            dataAdapter.Fill(dataTableCustomers);
-            
-
-            for (int i = 0; i < dataTableCustomers.Rows.Count; i++)
-            {
-                CustomerDto customerDto = new CustomerDto();
-                customerDto.id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
-
-                try
-                {
-                    customerDto.url = "http://localhost/api/v1/customers/" + customerDto.id;
-                    customerDto.username = dataTableCustomers.Rows[i]["username"].ToString();
-                    customerDto.first_name = dataTableCustomers.Rows[i]["first_name"].ToString();
-                    customerDto.last_name = dataTableCustomers.Rows[i]["last_name"].ToString();
-                    customerDto.email = dataTableCustomers.Rows[i]["email"].ToString();
-                    customerDto.phone = dataTableCustomers.Rows[i]["phone"].ToString();
-                    customerDto.password = dataTableCustomers.Rows[i]["password"].ToString();
-                    customerDto.role = dataTableCustomers.Rows[i]["role"].ToString();
-                }
-                catch
-                {
-                    numberOfCustomersAlreadyInWebshop += 1;
-                    continue;
-                }
-                
-                try
-                {
-                    customerDto.billing["first_name"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
-                    customerDto.billing["last_name"] = dataTableCustomers.Rows[i]["last_name_billing"].ToString();
-                    customerDto.billing["company"] = dataTableCustomers.Rows[i]["company_billing"].ToString();
-                    customerDto.billing["address"] = dataTableCustomers.Rows[i]["address_billing"].ToString();
-                    customerDto.billing["city"] = dataTableCustomers.Rows[i]["city_billing"].ToString();
-                    customerDto.billing["post_code"] = dataTableCustomers.Rows[i]["post_code_billing"].ToString();
-                    customerDto.billing["country"] = dataTableCustomers.Rows[i]["country_billing"].ToString();
-                    customerDto.billing["email"] = dataTableCustomers.Rows[i]["email_billing"].ToString();
-                }
-                catch
-                {
-                    customerDto.billing = null;
-                }
-
-                try
-                {
-                    customerDto.shipping["first_name"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
-                    customerDto.shipping["last_name"] = dataTableCustomers.Rows[i]["last_name_shipping"].ToString();
-                    customerDto.shipping["company"] = dataTableCustomers.Rows[i]["company_shipping"].ToString();
-                    customerDto.shipping["address"] = dataTableCustomers.Rows[i]["address_shipping"].ToString();
-                    customerDto.shipping["city"] = dataTableCustomers.Rows[i]["city_shipping"].ToString();
-                    customerDto.shipping["post_code"] = dataTableCustomers.Rows[i]["post_code_shipping"].ToString();
-                    customerDto.shipping["country"] = dataTableCustomers.Rows[i]["country_shipping"].ToString();
-                }               
-                catch
-                {    
-                    customerDto.shipping = null;                    
-                }
-                
-                numberOfCustomers += i;
-                customersFromDatabase.Add(customerDto);
-
-            }
-
-            
-            dbConnection.conn.Close();
-
-            if (numberOfCustomersAlreadyInWebshop > 0)
-            {
-                returnMessage = numberOfCustomers + " customers were added to the webshop and " + numberOfCustomersAlreadyInWebshop + " customers were already in the webshop.";
-            }
-            else
-            {
-                returnMessage = numberOfCustomers + " customers were added to the webshop"; 
-            }
-
-            return customersFromDatabase; 
-        }
+        
 
         // POST api/v1/<controller>/update/<source>
-        // gets post request from webshop when a customer is updated and updates customer in db
+        //processes post request from webshop when a customer is updated and updates customer in db
         [HttpPost]
         [Route("api/v1/customers/update/webshop")]
         public string UpdateCustomer(CustomerDto customerDto)
@@ -329,7 +329,7 @@ namespace APIv1.Controllers
         }
 
         // DELETE api/v1/<controller>/delete/<source>
-        // gets POST request from webshop when customer is deleted and deletes customer from db
+        // processes POST request from webshop when customer is deleted and deletes customer from db
         [HttpPost]
         [Route ("api/v1/customers/delete/webshop")]
         public string DeleteCustomer(CustomerDto customerDto)
