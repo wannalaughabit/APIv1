@@ -119,13 +119,13 @@ namespace APIv1.Controllers
             dbConnection.SQLString = "SELECT * FROM customers WHERE customer_id = @id";
             dbConnection.com = new MySqlCommand(dbConnection.SQLString, dbConnection.conn);
             dbConnection.com.Parameters.AddWithValue("@id", id);
+
             // create data adapter and fill dataTableCustomers with data from data adapter (customer data) 
             MySqlDataAdapter dataAdapter = new MySqlDataAdapter(dbConnection.SQLString, dbConnection.conn);
             dataAdapter.Fill(dataTableCustomers);            
 
            
-            CustomerDto customerDto = new CustomerDto();
-            int length = dataTableCustomers.Rows.Count;
+            CustomerDto customerDto = new CustomerDto();            
             customerDto.customer_id = id.ToString();
             customerDto.wp_user_id = (int?)dataTableCustomers.Rows[0]["wp_user_id"];
                 
