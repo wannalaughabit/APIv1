@@ -269,9 +269,9 @@ namespace APIv1.Controllers
         //processes post request from webshop when a customer is updated and updates customer in db
         [HttpPost]
         [Route("api/v1/customers/update/webshop")]
-        public string UpdateCustomer(CustomerDto customerDto)
+        public CustomerDto UpdateCustomer(CustomerDto customerDto)
         {
-            string returnMessage;
+            
             //open DB connection
             DBconnection dbConnection = new DBconnection();
             dbConnection.openConnection();
@@ -312,29 +312,29 @@ namespace APIv1.Controllers
             try
             {
                 dbConnection.com.ExecuteNonQuery();
-                returnMessage = "The customer with the ID " + customerDto.id + " was updated.";
+                dbConnection.com.Dispose();
+                dbConnection.conn.Close();
+                
             }
             catch 
             {
-                returnMessage = "Customer not in database.";               
+                // gotta figure this out            
             }
 
-            dbConnection.com.Dispose();
-            dbConnection.conn.Close();
+            return customerDto;
 
 
             // catches test data from webhook in case it's updated or newly created needs to be implemented
 
-            return returnMessage;
+
         }
 
         // DELETE api/v1/<controller>/delete/<source>
         // processes POST request from webshop when customer is deleted and deletes customer from db
         [HttpPost]
         [Route ("api/v1/customers/delete/webshop")]
-        public string DeleteCustomer(CustomerDto customerDto)
-        {
-            string returnMessage;
+        public int DeleteCustomer(CustomerDto customerDto)
+        {            
             //open DB connection
             DBconnection dbConnection = new DBconnection();
             dbConnection.openConnection();
@@ -350,17 +350,20 @@ namespace APIv1.Controllers
             try
             {
                 dbConnection.com.ExecuteNonQuery();
-                returnMessage = "The customer with the ID " + customerDto.id + " was deleted.";
+                dbConnection.com.Dispose();
+                dbConnection.conn.Close();
+                return 200;
+                
             }
             catch 
             {
-
-                returnMessage = "The customer not in database.";
+                dbConnection.com.Dispose();
+                dbConnection.conn.Close();
+                return 404;
             }
-            dbConnection.com.Dispose();
-            dbConnection.conn.Close();
+            
 
-            return returnMessage;
+            
         }
     }
 }
