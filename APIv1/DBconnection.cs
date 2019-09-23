@@ -13,6 +13,7 @@ namespace APIv1
         public MySqlConnection conn = new MySqlConnection();
         public MySqlCommand com;
         public String SQLString;
+
         public DBconnection()
         {
 

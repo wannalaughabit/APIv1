@@ -12,7 +12,9 @@ namespace APIv1.Data_Transfer_Objects
         public string url;
 
         [JsonProperty("id")]
-        public int id { get; set; }
+        public int? wp_user_id { get; set; }
+
+        public string customer_id;
 
         [JsonProperty("username")]
         public string username { get; set; }
@@ -51,7 +53,7 @@ namespace APIv1.Data_Transfer_Objects
 
         public CustomerDto(JObject json)
         {
-            id = (int)json["id"];
+            wp_user_id = (int?)json["id"];
             username = (string)json["username"];
             first_name = (string)json["first_name"];
             last_name = (string)json["last_name"];

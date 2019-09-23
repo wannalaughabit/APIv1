@@ -28,7 +28,7 @@ namespace APIv1.Controllers
                 {
                     obj = JObject.Load(json);
                     customerDto = new CustomerDto(obj);
-                    customerDto.url = Authentication.uriRoot + "customers/" + customerDto.id;
+                    customerDto.url = Authentication.uriRoot + "customers/" + customerDto.wp_user_id;
                     webshopCustomers.Add(customerDto);
                 }
             }
@@ -48,7 +48,7 @@ namespace APIv1.Controllers
             {
                 CustomerDto customerDto = new CustomerDto(customer);
                 //empty id because you cannot send an id to wordpress
-                customerDto.id = 0;
+                customerDto.wp_user_id = null;
                 customersAddedToWebshop.Add(customerDto);
                 request = new WebReq();
                 request.createPostRequest(customerDto, "customers");
