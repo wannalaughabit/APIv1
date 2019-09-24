@@ -14,7 +14,8 @@ namespace APIv1.Data_Transfer_Objects
         [JsonProperty("id")]
         public int? wp_user_id { get; set; }
 
-        public string customer_id;
+        [JsonProperty("customer_id")]
+        public string customer_id { get; set; }
 
         [JsonProperty("username")]
         public string username { get; set; }
