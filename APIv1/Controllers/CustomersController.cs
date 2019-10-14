@@ -234,22 +234,38 @@ namespace APIv1.Controllers
                 dbConnection.com.Parameters.AddWithValue("@email", customerDto.email);
                 dbConnection.com.Parameters.AddWithValue("@phone", customerDto.phone);
 
-                dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
-                dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
-                dbConnection.com.Parameters.AddWithValue("@company_billing", customerDto.billing["company"]);
-                dbConnection.com.Parameters.AddWithValue("@address_billing", customerDto.billing["address_1"]);
-                dbConnection.com.Parameters.AddWithValue("@city_billing", customerDto.billing["city"]);
-                dbConnection.com.Parameters.AddWithValue("@post_code_billing", customerDto.billing["postcode"]);
-                dbConnection.com.Parameters.AddWithValue("@country_billing", customerDto.billing["country"]);
-                dbConnection.com.Parameters.AddWithValue("@email_billing", customerDto.billing["email"]);
+                try
+                {
+                    dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
+                    dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
+                    dbConnection.com.Parameters.AddWithValue("@company_billing", customerDto.billing["company"]);
+                    dbConnection.com.Parameters.AddWithValue("@address_billing", customerDto.billing["address_1"]);
+                    dbConnection.com.Parameters.AddWithValue("@city_billing", customerDto.billing["city"]);
+                    dbConnection.com.Parameters.AddWithValue("@post_code_billing", customerDto.billing["postcode"]);
+                    dbConnection.com.Parameters.AddWithValue("@country_billing", customerDto.billing["country"]);
+                    dbConnection.com.Parameters.AddWithValue("@email_billing", customerDto.billing["email"]);
+                }
+                catch 
+                {
 
-                dbConnection.com.Parameters.AddWithValue("@first_name_shipping", customerDto.shipping["first_name"]);
-                dbConnection.com.Parameters.AddWithValue("@last_name_shipping", customerDto.shipping["last_name"]);
-                dbConnection.com.Parameters.AddWithValue("@company_shipping", customerDto.shipping["company"]);
-                dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
-                dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
-                dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
-                dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
+                    dbConnection.com.Parameters.AddWithValue("@billing", null);
+                }
+
+                try
+                {
+                    dbConnection.com.Parameters.AddWithValue("@first_name_shipping", customerDto.shipping["first_name"]);
+                    dbConnection.com.Parameters.AddWithValue("@last_name_shipping", customerDto.shipping["last_name"]);
+                    dbConnection.com.Parameters.AddWithValue("@company_shipping", customerDto.shipping["company"]);
+                    dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
+                    dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
+                    dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
+                    dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
+                }
+                catch 
+                {
+
+                    dbConnection.com.Parameters.AddWithValue("@shipping", null);
+                }
 
                 //dbConnection.com.Dispose();
 
@@ -300,29 +316,43 @@ namespace APIv1.Controllers
             {
                 dbConnection.com.Parameters.AddWithValue("@username", customerDto.username);
 
-
-
                 dbConnection.com.Parameters.AddWithValue("@first_name", customerDto.first_name);
                 dbConnection.com.Parameters.AddWithValue("@last_name", customerDto.last_name);
                 dbConnection.com.Parameters.AddWithValue("@email", customerDto.email);
                 dbConnection.com.Parameters.AddWithValue("@phone", customerDto.phone);
 
-                dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
-                dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
-                dbConnection.com.Parameters.AddWithValue("@company_billing", customerDto.billing["company"]);
-                dbConnection.com.Parameters.AddWithValue("@address_billing", customerDto.billing["address_1"]);
-                dbConnection.com.Parameters.AddWithValue("@city_billing", customerDto.billing["city"]);
-                dbConnection.com.Parameters.AddWithValue("@post_code_billing", customerDto.billing["postcode"]);
-                dbConnection.com.Parameters.AddWithValue("@country_billing", customerDto.billing["country"]);
-                dbConnection.com.Parameters.AddWithValue("@email_billing", customerDto.billing["email"]);
+                try
+                {
+                    dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
+                    dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
+                    dbConnection.com.Parameters.AddWithValue("@company_billing", customerDto.billing["company"]);
+                    dbConnection.com.Parameters.AddWithValue("@address_billing", customerDto.billing["address_1"]);
+                    dbConnection.com.Parameters.AddWithValue("@city_billing", customerDto.billing["city"]);
+                    dbConnection.com.Parameters.AddWithValue("@post_code_billing", customerDto.billing["postcode"]);
+                    dbConnection.com.Parameters.AddWithValue("@country_billing", customerDto.billing["country"]);
+                    dbConnection.com.Parameters.AddWithValue("@email_billing", customerDto.billing["email"]);
+                }
+                catch
+                {
 
-                dbConnection.com.Parameters.AddWithValue("@first_name_shipping", customerDto.shipping["first_name"]);
-                dbConnection.com.Parameters.AddWithValue("@last_name_shipping", customerDto.shipping["last_name"]);
-                dbConnection.com.Parameters.AddWithValue("@company_shipping", customerDto.shipping["company"]);
-                dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
-                dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
-                dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
-                dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
+                    dbConnection.com.Parameters.AddWithValue("@billing", null);
+                }
+
+                try
+                {
+                    dbConnection.com.Parameters.AddWithValue("@first_name_shipping", customerDto.shipping["first_name"]);
+                    dbConnection.com.Parameters.AddWithValue("@last_name_shipping", customerDto.shipping["last_name"]);
+                    dbConnection.com.Parameters.AddWithValue("@company_shipping", customerDto.shipping["company"]);
+                    dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
+                    dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
+                    dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
+                    dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
+                }
+                catch
+                {
+
+                    dbConnection.com.Parameters.AddWithValue("@shipping", null);
+                }
 
                 dbConnection.com.ExecuteNonQuery();
                 dbConnection.com.Dispose();
