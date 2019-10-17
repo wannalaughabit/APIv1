@@ -43,7 +43,7 @@ namespace APIv1.Controllers
             for (int i = 0; i < dataTableCustomers.Rows.Count; i++)
             {
                 CustomerDto customerDto = new CustomerDto();
-                customerDto.wp_user_id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
+                //customerDto.wp_user_id = (int?)dataTableCustomers.Rows[i]["wp_user_id"];
                 customerDto.customer_id = dataTableCustomers.Rows[i]["customer_id"].ToString();
 
                 try
