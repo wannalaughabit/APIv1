@@ -43,7 +43,16 @@ namespace APIv1.Controllers
             for (int i = 0; i < dataTableCustomers.Rows.Count; i++)
             {
                 CustomerDto customerDto = new CustomerDto();
-                customerDto.wp_user_id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
+
+                try
+                {
+                    customerDto.wp_user_id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
+                }
+                catch 
+                {
+
+                    customerDto.wp_user_id = null;
+                }
                 customerDto.customer_id = dataTableCustomers.Rows[i]["customer_id"].ToString();
 
                 try
@@ -268,7 +277,7 @@ namespace APIv1.Controllers
                 }
 
                 //dbConnection.com.Dispose();
-
+                
                 try
                 {
                     numberOfCustomers += dbConnection.com.ExecuteNonQuery();

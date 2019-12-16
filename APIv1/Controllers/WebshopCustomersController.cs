@@ -17,11 +17,10 @@ namespace APIv1.Controllers
             JObject obj = null;
             CustomerDto customerDto;
             WebReq request = new WebReq();
-            JsonTextReader json = request.createGetRequest("customers");
-            
+            JsonTextReader json = request.createGetRequest("customers");            
 
 
-            //loop through objects to create a CustomerDto for each and pass it to CreateCustomer
+            //loop through objects to create a CustomerDto for each 
             while (json.Read())
             {
                 if (json.TokenType == JsonToken.StartObject)
@@ -39,20 +38,20 @@ namespace APIv1.Controllers
         // POSTS customers to webshop 
         [HttpPost]
         [Route("api/v1/webshopcustomers")]
-        public List<CustomerDto> PostCustomerToWebshop(CustomerDto customerDto)
+        public List<CustomerDto> PostCustomerToWebshop([FromBody] JArray content)
         {
             List<CustomerDto> customersAddedToWebshop = new List<CustomerDto>();
             WebReq request;
 
-            //foreach (JObject customer in customers)
-            //{
-                //CustomerDto customerDto = new CustomerDto(customer);
+            foreach (JObject customer in content)
+            {
+                CustomerDto customerDto = new CustomerDto(customer);
                 //empty id because you cannot send an id to wordpress
-                customerDto.wp_user_id = null;
+                customerDto.wp_user_id =null;
                 customersAddedToWebshop.Add(customerDto);
                 request = new WebReq();
                 request.createPostRequest(customerDto, "customers");
-            //}
+            }
 
             return customersAddedToWebshop;
         }
