@@ -167,8 +167,11 @@
     <Compile Include="Authentication.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ItemsController.cs" />
+    <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Controllers\WebshopCustomersController.cs" />
+    <Compile Include="Controllers\WebshopItemsController.cs" />
     <Compile Include="Data Transfer Objects\CustomerDto.cs" />
     <Compile Include="Data Transfer Objects\ItemDto.cs" />
     <Compile Include="Data Transfer Objects\OrderDto.cs" />
