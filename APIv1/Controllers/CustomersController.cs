@@ -228,7 +228,7 @@ namespace APIv1.Controllers
             {
                 CustomerDto customerDto = new CustomerDto(customer);
                 //creates DB entry for each Object                   
-                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone, " +
+                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, " +
                     "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
                     "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
                     "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone, " +
@@ -277,15 +277,15 @@ namespace APIv1.Controllers
                 }
 
                 //dbConnection.com.Dispose();
-                
+
                 try
                 {
                     numberOfCustomers += dbConnection.com.ExecuteNonQuery();
                     customerDto.url = @"http://localhost:51074/api/v1/customers/" + customerDto.wp_user_id;
                     customersCreated.Add(customerDto);
                 }
-                catch 
-                {  
+                catch
+                {
                     continue;
                 }
 
@@ -311,7 +311,7 @@ namespace APIv1.Controllers
                 dbConnection.openConnection();
 
                 // enter customer into DB
-                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone, " +
+                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, " +
                             "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
                             "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
                             "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone, " +

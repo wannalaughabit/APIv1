@@ -19,18 +19,22 @@ namespace APIv1.Controllers
         public OrderDto PostOrderToDatabase(OrderDto orderDto)
         {
 
-            
+
 
             // get customer id from table customers
 
             // declare variables
-            int? id_customer = null;
-            String SQLString = "SELECT * FROM customers ";
+            //String id_customer = null;
+            int id_customer = 0;
+            //String SQLString = "SELECT customer_id FROM customers WHERE wp_user_id = @wp_user_id";
+            String SQLString = "SELECT * FROM customers";
             DataTable dataTableCustomers = new DataTable();            
             DBconnection dbConnectionSelect = new DBconnection();
+            //dbConnectionSelect.com = new MySqlCommand(SQLString, dbConnectionSelect.conn);
             // open connection to database
             dbConnectionSelect.openConnection();
-            
+            //dbConnectionSelect.com.Parameters.AddWithValue("@wp_user_id", orderDto.wp_customer_id);
+            //id_customer = dbConnectionSelect.com.ExecuteReader().ToString();
            
 
             // create data adapter and fill dataTableCustomers with data from data adapter (customer data) 
@@ -45,21 +49,22 @@ namespace APIv1.Controllers
                 }
             }
 
-            
+
             dbConnectionSelect.conn.Close();
 
             // enter order into DB
             //open DB connection
             DBconnection dbConnection = new DBconnection();
             dbConnection.openConnection();
-            dbConnection.SQLString = "INSERT INTO orders (wp_order_id, id_customer, date)" +                       
-                        "VALUES(@wp_order_id, @id_customer, @date)";            
+            dbConnection.SQLString = "INSERT INTO orders (wp_order_id, id_customer, date, total)" +                       
+                        "VALUES(@wp_order_id, @id_customer, @date, @total)";            
                         
             dbConnection.com = new MySqlCommand(dbConnection.SQLString, dbConnection.conn);
 
             dbConnection.com.Parameters.AddWithValue("@wp_order_id", orderDto.wp_order_id);
             dbConnection.com.Parameters.AddWithValue("@id_customer", id_customer);
             dbConnection.com.Parameters.AddWithValue("@date", orderDto.date);                
+            dbConnection.com.Parameters.AddWithValue("@total", orderDto.total);                
                             
 
             dbConnection.com.ExecuteNonQuery();
