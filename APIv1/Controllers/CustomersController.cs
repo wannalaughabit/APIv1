@@ -43,7 +43,16 @@ namespace APIv1.Controllers
             for (int i = 0; i < dataTableCustomers.Rows.Count; i++)
             {
                 CustomerDto customerDto = new CustomerDto();
-                //customerDto.wp_user_id = (int?)dataTableCustomers.Rows[i]["wp_user_id"];
+
+                try
+                {
+                    customerDto.wp_user_id = (int)dataTableCustomers.Rows[i]["wp_user_id"];
+                }
+                catch 
+                {
+
+                    customerDto.wp_user_id = null;
+                }
                 customerDto.customer_id = dataTableCustomers.Rows[i]["customer_id"].ToString();
 
                 try
@@ -219,7 +228,7 @@ namespace APIv1.Controllers
             {
                 CustomerDto customerDto = new CustomerDto(customer);
                 //creates DB entry for each Object                   
-                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone, " +
+                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, " +
                     "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
                     "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
                     "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone, " +
@@ -275,8 +284,8 @@ namespace APIv1.Controllers
                     customerDto.url = @"http://localhost:51074/api/v1/customers/" + customerDto.wp_user_id;
                     customersCreated.Add(customerDto);
                 }
-                catch 
-                {  
+                catch
+                {
                     continue;
                 }
 
@@ -302,7 +311,7 @@ namespace APIv1.Controllers
                 dbConnection.openConnection();
 
                 // enter customer into DB
-                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone, " +
+                dbConnection.SQLString = "INSERT INTO customers (wp_user_id, username, first_name, last_name, email, phone_number, " +
                             "first_name_billing, last_name_billing, company_billing, address_billing, city_billing, post_code_billing, country_billing, email_billing," +
                             "first_name_shipping, last_name_shipping, company_shipping, address_shipping, city_shipping, post_code_shipping, country_shipping)" +
                             "VALUES(@wp_user_id, @username, @first_name, @last_name, @email, @phone, " +

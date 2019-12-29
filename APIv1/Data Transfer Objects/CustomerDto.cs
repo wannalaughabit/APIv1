@@ -54,7 +54,7 @@ namespace APIv1.Data_Transfer_Objects
 
         public CustomerDto(JObject json)
         {
-            //wp_user_id = (int?)json["id"];
+            wp_user_id = (int?)json["id"];
             username = (string)json["username"];
             first_name = (string)json["first_name"];
             last_name = (string)json["last_name"];
