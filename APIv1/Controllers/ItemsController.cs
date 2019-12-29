@@ -65,5 +65,45 @@ namespace APIv1.Controllers
             dbConnection.conn.Close();
             return itemsCreated;
         }
+
+        [HttpPost]
+        [Route("api/v1/items/update")]
+        public void UpdateItem(OrderDto orderDto)
+        {
+
+            //open DB connection
+            DBconnection dbConnection = new DBconnection();
+            dbConnection.openConnection();
+
+            for (int i = 0; i < orderDto.line_items.Count(); i++)
+            {
+                // update item stock quantity in DB
+                dbConnection.SQLString = "UPDATE items SET item_stock_qty = item_stock_qty - @quantity WHERE wp_item_id = @wp_item_id";
+
+
+                dbConnection.com = new MySqlCommand(dbConnection.SQLString, dbConnection.conn);
+
+                dbConnection.com.Parameters.AddWithValue("@wp_item_id", orderDto.line_items[i]["product_id"]);
+                dbConnection.com.Parameters.AddWithValue("@quantity", orderDto.line_items[i]["quantity"]);
+
+
+                //execute nonQuery and close connection
+                try
+                {
+                    dbConnection.com.ExecuteNonQuery();
+
+                }
+                catch
+                {
+                    //itemDto = null;
+                }
+            }
+         
+
+            dbConnection.com.Dispose();
+            dbConnection.conn.Close();
+
+            //return orderDto;
+        }
     }
 }

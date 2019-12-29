@@ -18,9 +18,6 @@ namespace APIv1.Controllers
         [Route("api/v1/orders/webshop")]
         public OrderDto PostOrderToDatabase(OrderDto orderDto)
         {
-
-
-
             // get customer id from table customers
 
             // declare variables
