@@ -40,21 +40,21 @@ namespace APIv1.Controllers
                 
                 dbConnection.com.Parameters.AddWithValue("@wp_item_id", itemDto.wp_item_id);
                 dbConnection.com.Parameters.AddWithValue("@item_price", itemDto.price);
-                dbConnection.com.Parameters.AddWithValue("@item_name", itemDto.name);               
-                
+                dbConnection.com.Parameters.AddWithValue("@item_name", itemDto.name);
+
 
                 //dbConnection.com.Dispose();
 
-                //try
-                //{
+                try
+                {
                     numberOfItems += dbConnection.com.ExecuteNonQuery();
                     itemDto.url = @"http://localhost:51074/api/v1/customers/" + itemDto.wp_item_id;
                     itemsCreated.Add(itemDto);
-                //}
-                //catch
-                //{
-                //    continue;
-                //}
+                }
+                catch
+                {
+                    continue;
+                }
 
             }
             for (int i = 0; i < itemsAlreadyInDatabase.Count; i++)
@@ -101,7 +101,7 @@ namespace APIv1.Controllers
                     {
                         itemID = null;
                     }
-                }
+                }   
                 dbConnection.com.Dispose();
                 dbConnection.conn.Close();
             }

@@ -422,15 +422,15 @@ namespace APIv1.Controllers
             dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
 
             //execute nonQuery and close connection
-            //try
-            //{
+            try
+            {
                 dbConnection.com.ExecuteNonQuery();
-                
-            //}
-            //catch 
-            //{
-            //    customerDto = null;               
-            //}
+
+            }
+            catch
+            {
+            customerDto = null;
+            }
 
             dbConnection.com.Dispose();
             dbConnection.conn.Close();            
