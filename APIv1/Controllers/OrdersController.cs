@@ -61,10 +61,18 @@ namespace APIv1.Controllers
             dbConnection.com.Parameters.AddWithValue("@wp_order_id", orderDto.wp_order_id);
             dbConnection.com.Parameters.AddWithValue("@id_customer", id_customer);
             dbConnection.com.Parameters.AddWithValue("@date", orderDto.date);                
-            dbConnection.com.Parameters.AddWithValue("@total", orderDto.total);                
-                            
+            dbConnection.com.Parameters.AddWithValue("@total", orderDto.total);
 
-            dbConnection.com.ExecuteNonQuery();
+
+            try
+            {
+                dbConnection.com.ExecuteNonQuery();
+            }
+            catch
+            {
+                return orderDto;
+
+            }
             dbConnection.com.Dispose();
             dbConnection.conn.Close();
             

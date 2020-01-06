@@ -389,7 +389,7 @@ namespace APIv1.Controllers
             dbConnection.openConnection();
 
             // enter customer into DB
-            dbConnection.SQLString = "UPDATE customers SET wp_user_id = @wp_user_id, first_name = @first_name, last_name = @Last_name, email = @email, phone = @phone, " +
+            dbConnection.SQLString = "UPDATE customers SET wp_user_id = @wp_user_id, first_name = @first_name, last_name = @Last_name, email = @email, phone_number = @phone, " +
                     "first_name_billing = @first_name_billing, last_name_billing = @Last_name_billing, company_billing = @company_billing, address_billing = @address_billing, city_billing = @city_billing, post_code_billing = @post_code_billing, country_billing = @country_billing, email_billing = @email_billing, " +
                     "first_name_shipping = @first_name_shipping, last_name_shipping = @Last_name_shipping, company_shipping = @company_shipping, address_shipping = @address_shipping, city_shipping = @city_shipping, post_code_shipping = @post_code_shipping, country_shipping = @country_shipping " +
                     "WHERE username = @username";
@@ -422,15 +422,15 @@ namespace APIv1.Controllers
             dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
 
             //execute nonQuery and close connection
-            try
-            {
+            //try
+            //{
                 dbConnection.com.ExecuteNonQuery();
                 
-            }
-            catch 
-            {
-                customerDto = null;               
-            }
+            //}
+            //catch 
+            //{
+            //    customerDto = null;               
+            //}
 
             dbConnection.com.Dispose();
             dbConnection.conn.Close();            
