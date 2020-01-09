@@ -61,10 +61,27 @@ namespace APIv1.Data_Transfer_Objects
             address = (string)json["address"];
             email = (string)json["email"];
             phone = (string)json["phone"];            
-            password = (string)json["password"];
+            //password = (string)json["password"];
             role = (string)json["role"];
-            billing = json["billing"].ToObject<Dictionary<string, string>>();
-            shipping = json["shipping"].ToObject<Dictionary<string, string>>();
+
+            try
+            {
+                billing = json["billing"].ToObject<Dictionary<string, string>>();
+            }
+            catch 
+            {
+
+                billing = null;
+            }
+            try
+            {
+                shipping = json["shipping"].ToObject<Dictionary<string, string>>();
+            }
+            catch
+            {
+
+                shipping = null;
+            }
         }
 
     }

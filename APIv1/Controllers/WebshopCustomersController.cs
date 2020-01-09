@@ -34,27 +34,30 @@ namespace APIv1.Controllers
             return webshopCustomers;
         }
 
-        // POST api/v1/<controller>/
-        // POSTS customers to webshop 
+        //POST api/v1/<controller>/
+        //POSTS customers to webshop
         [HttpPost]
         [Route("api/v1/webshopcustomers")]
         public List<CustomerDto> PostCustomerToWebshop([FromBody] JArray content)
         {
             List<CustomerDto> customersAddedToWebshop = new List<CustomerDto>();
             WebReq request;
-
+            CustomerDto test = new CustomerDto();
             foreach (JObject customer in content)
             {
                 CustomerDto customerDto = new CustomerDto(customer);
                 //empty id because you cannot send an id to wordpress
-                customerDto.wp_user_id =null;
+                customerDto.wp_user_id = null;
                 customersAddedToWebshop.Add(customerDto);
+
                 request = new WebReq();
                 request.createPostRequest(customerDto, "customers");
             }
 
             return customersAddedToWebshop;
         }
+
+
     }
 
         
