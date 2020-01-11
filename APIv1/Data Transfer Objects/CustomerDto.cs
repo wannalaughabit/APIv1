@@ -33,19 +33,19 @@ namespace APIv1.Data_Transfer_Objects
         public string email { get; set; }
 
         [JsonProperty("phone")]
-        public string phone { get; set; }        
-
-        [JsonProperty("password")]
-        public string password { get; set; }
+        public string phone { get; set; }          
 
         [JsonProperty("role")]
         public string role { get; set; }
 
         [JsonProperty("billing")]
         public Dictionary<string, string> billing { get; set; }
+        //public JToken billing { get; set; }
 
         [JsonProperty("shipping")]
         public Dictionary<string, string> shipping { get; set; }
+        //public JToken shipping { get; set; }
+
 
         public CustomerDto()
         {
@@ -60,8 +60,7 @@ namespace APIv1.Data_Transfer_Objects
             last_name = (string)json["last_name"];
             address = (string)json["address"];
             email = (string)json["email"];
-            phone = (string)json["phone"];            
-            //password = (string)json["password"];
+            phone = (string)json["phone"];           
             role = (string)json["role"];
 
             try

@@ -50,8 +50,15 @@ namespace APIv1.Controllers
                 customerDto.wp_user_id = null;
                 customersAddedToWebshop.Add(customerDto);
 
-                request = new WebReq();
-                request.createPostRequest(customerDto, "customers");
+                try
+                {
+                    request = new WebReq();
+                    request.createPostRequest(customerDto, "customers");
+                }
+                catch 
+                {
+                    continue;
+                }
             }
 
             return customersAddedToWebshop;
