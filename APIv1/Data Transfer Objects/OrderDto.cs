@@ -16,7 +16,7 @@ namespace APIv1.Data_Transfer_Objects
         
 
         [JsonProperty("customer_id")]
-        public int wp_customer_id { get; set; }
+        public int? wp_customer_id { get; set; }
 
         [JsonProperty("total")]
         public double total { get; set; }
