@@ -43,22 +43,30 @@ namespace APIv1.Controllers
             List<CustomerDto> customersAddedToWebshop = new List<CustomerDto>();
             WebReq request;
             CustomerDto test = new CustomerDto();
-            foreach (JObject customer in content)
+            try
             {
-                CustomerDto customerDto = new CustomerDto(customer);
-                //empty id because you cannot send an id to wordpress
-                customerDto.wp_user_id = null;
-                customersAddedToWebshop.Add(customerDto);
+                foreach (JObject customer in content)
+                {
+                    CustomerDto customerDto = new CustomerDto(customer);
+                    //empty id because you cannot send an id to wordpress
+                    customerDto.wp_user_id = null;
+                    customersAddedToWebshop.Add(customerDto);
 
-                try
-                {
-                    request = new WebReq();
-                    request.createPostRequest(customerDto, "customers");
+                    try
+                    {
+                        request = new WebReq();
+                        request.createPostRequest(customerDto, "customers");
+                    }
+                    catch
+                    {
+                        continue;
+                    }
                 }
-                catch 
-                {
-                    continue;
-                }
+            }
+            catch
+            {
+                return customersAddedToWebshop;
+
             }
 
             return customersAddedToWebshop;
