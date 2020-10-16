@@ -62,25 +62,41 @@ namespace APIv1.Controllers
                     customerDto.first_name = dataTableCustomers.Rows[i]["first_name"].ToString();
                     customerDto.last_name = dataTableCustomers.Rows[i]["last_name"].ToString();
                     customerDto.email = dataTableCustomers.Rows[i]["email"].ToString();
-                    customerDto.phone = dataTableCustomers.Rows[i]["phone"].ToString();
-                    customerDto.password = dataTableCustomers.Rows[i]["password"].ToString();
-                    customerDto.role = dataTableCustomers.Rows[i]["role"].ToString();
+                    customerDto.phone = dataTableCustomers.Rows[i]["phone_number"].ToString();
                 }
+
                 catch
-                {                    
+                {
                     continue;
                 }
 
                 try
                 {
-                    customerDto.billing["first_name"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
-                    customerDto.billing["last_name"] = dataTableCustomers.Rows[i]["last_name_billing"].ToString();
-                    customerDto.billing["company"] = dataTableCustomers.Rows[i]["company_billing"].ToString();
-                    customerDto.billing["address"] = dataTableCustomers.Rows[i]["address_billing"].ToString();
-                    customerDto.billing["city"] = dataTableCustomers.Rows[i]["city_billing"].ToString();
-                    customerDto.billing["post_code"] = dataTableCustomers.Rows[i]["post_code_billing"].ToString();
-                    customerDto.billing["country"] = dataTableCustomers.Rows[i]["country_billing"].ToString();
-                    customerDto.billing["email"] = dataTableCustomers.Rows[i]["email_billing"].ToString();
+                    customerDto.billing = new Dictionary<string, string>()
+                    {
+                        { "first_name",  dataTableCustomers.Rows[i]["first_name_billing"].ToString() },
+                        { "last_name",  dataTableCustomers.Rows[i]["last_name_billing"].ToString() },
+                        { "company",  dataTableCustomers.Rows[i]["company_billing"].ToString() },
+                        { "address",  dataTableCustomers.Rows[i]["address_billing"].ToString() },
+                        { "city",  dataTableCustomers.Rows[i]["city_billing"].ToString() },
+                        { "post_code",  dataTableCustomers.Rows[i]["post_code_billing"].ToString() },
+                        { "country",  dataTableCustomers.Rows[i]["country_billing"].ToString() },
+                        { "email",  dataTableCustomers.Rows[i]["email_billing"].ToString() }
+
+                    };
+                    if (customerDto.billing["first_name"] == "")
+                    {
+                        customerDto.billing = null;
+                    }
+
+                    //customerDto.billing["first_name_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                    //customerDto.billing["last_name_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                    //customerDto.billing["company_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                    //customerDto.billing["address_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                    //customerDto.billing["city_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                    //customerDto.billing["post_code_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                    //customerDto.billing["country_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                    //customerDto.billing["email_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
                 }
                 catch
                 {
@@ -89,19 +105,34 @@ namespace APIv1.Controllers
 
                 try
                 {
-                    customerDto.shipping["first_name"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
-                    customerDto.shipping["last_name"] = dataTableCustomers.Rows[i]["last_name_shipping"].ToString();
-                    customerDto.shipping["company"] = dataTableCustomers.Rows[i]["company_shipping"].ToString();
-                    customerDto.shipping["address"] = dataTableCustomers.Rows[i]["address_shipping"].ToString();
-                    customerDto.shipping["city"] = dataTableCustomers.Rows[i]["city_shipping"].ToString();
-                    customerDto.shipping["post_code"] = dataTableCustomers.Rows[i]["post_code_shipping"].ToString();
-                    customerDto.shipping["country"] = dataTableCustomers.Rows[i]["country_shipping"].ToString();
+                    customerDto.shipping = new Dictionary<string, string>()
+                    {
+                        { "first_name",  dataTableCustomers.Rows[i]["first_name_shipping"].ToString() },
+                        { "last_name",  dataTableCustomers.Rows[i]["last_name_shipping"].ToString() },
+                        { "company",  dataTableCustomers.Rows[i]["company_shipping"].ToString() },
+                        { "address",  dataTableCustomers.Rows[i]["address_shipping"].ToString() },
+                        { "city",  dataTableCustomers.Rows[i]["city_shipping"].ToString() },
+                        { "post_code",  dataTableCustomers.Rows[i]["post_code_shipping"].ToString() },
+                        { "country",  dataTableCustomers.Rows[i]["country_shipping"].ToString() },
+                        { "email",  dataTableCustomers.Rows[i]["email_shipping"].ToString() }
+
+                    };
+                    //customerDto.shipping["first_name_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                    //customerDto.shipping["last_name_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                    //customerDto.shipping["company_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                    //customerDto.shipping["address_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                    //customerDto.shipping["city_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                    //customerDto.shipping["post_code_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                    //customerDto.shipping["country_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                    //customerDto.shipping["email_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+
                 }
                 catch
                 {
                     customerDto.shipping = null;
                 }
-                
+
+
                 customersFromDatabase.Add(customerDto);
 
             }
@@ -149,8 +180,7 @@ namespace APIv1.Controllers
                         customerDto.first_name = dataTableCustomers.Rows[i]["first_name"].ToString();
                         customerDto.last_name = dataTableCustomers.Rows[i]["last_name"].ToString();
                         customerDto.email = dataTableCustomers.Rows[i]["email"].ToString();
-                        customerDto.phone = dataTableCustomers.Rows[i]["phone"].ToString();
-                        customerDto.password = dataTableCustomers.Rows[i]["password"].ToString();
+                        customerDto.phone = dataTableCustomers.Rows[i]["phone"].ToString();                        
                         customerDto.role = dataTableCustomers.Rows[i]["role"].ToString();
                     }
                     catch
@@ -160,14 +190,26 @@ namespace APIv1.Controllers
 
                     try
                     {
-                        customerDto.billing["first_name"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
-                        customerDto.billing["last_name"] = dataTableCustomers.Rows[i]["last_name_billing"].ToString();
-                        customerDto.billing["company"] = dataTableCustomers.Rows[i]["company_billing"].ToString();
-                        customerDto.billing["address"] = dataTableCustomers.Rows[i]["address_billing"].ToString();
-                        customerDto.billing["city"] = dataTableCustomers.Rows[i]["city_billing"].ToString();
-                        customerDto.billing["post_code"] = dataTableCustomers.Rows[i]["post_code_billing"].ToString();
-                        customerDto.billing["country"] = dataTableCustomers.Rows[i]["country_billing"].ToString();
-                        customerDto.billing["email"] = dataTableCustomers.Rows[i]["email_billing"].ToString();
+                        //    customerDto.billing = new Dictionary<string, string>()
+                        //{
+                        //    { "first_name",  dataTableCustomers.Rows[i]["first_name_billing"].ToString() },
+                        //    { "last_name",  dataTableCustomers.Rows[i]["last_name_billing"].ToString() },
+                        //    { "company",  dataTableCustomers.Rows[i]["company_billing"].ToString() },
+                        //    { "address",  dataTableCustomers.Rows[i]["address_billing"].ToString() },
+                        //    { "city",  dataTableCustomers.Rows[i]["city_billing"].ToString() },
+                        //    { "post_code",  dataTableCustomers.Rows[i]["post_code_billing"].ToString() },
+                        //    { "country",  dataTableCustomers.Rows[i]["country_billing"].ToString() },
+                        //    { "email",  dataTableCustomers.Rows[i]["email_billing"].ToString() }
+
+                        //};
+                        customerDto.billing["first_name_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                        customerDto.billing["last_name_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                        customerDto.billing["company_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                        customerDto.billing["address_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                        customerDto.billing["city_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                        customerDto.billing["post_code_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                        customerDto.billing["country_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
+                        customerDto.billing["email_billing"] = dataTableCustomers.Rows[i]["first_name_billing"].ToString();
                     }
                     catch
                     {
@@ -176,13 +218,27 @@ namespace APIv1.Controllers
 
                     try
                     {
-                        customerDto.shipping["first_name"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
-                        customerDto.shipping["last_name"] = dataTableCustomers.Rows[i]["last_name_shipping"].ToString();
-                        customerDto.shipping["company"] = dataTableCustomers.Rows[i]["company_shipping"].ToString();
-                        customerDto.shipping["address"] = dataTableCustomers.Rows[i]["address_shipping"].ToString();
-                        customerDto.shipping["city"] = dataTableCustomers.Rows[i]["city_shipping"].ToString();
-                        customerDto.shipping["post_code"] = dataTableCustomers.Rows[i]["post_code_shipping"].ToString();
-                        customerDto.shipping["country"] = dataTableCustomers.Rows[i]["country_shipping"].ToString();
+                        //    customerDto.shipping = new Dictionary<string, string>()
+                        //{
+                        //    { "first_name",  dataTableCustomers.Rows[i]["first_name_shipping"].ToString() },
+                        //    { "last_name",  dataTableCustomers.Rows[i]["last_name_shipping"].ToString() },
+                        //    { "company",  dataTableCustomers.Rows[i]["company_shipping"].ToString() },
+                        //    { "address",  dataTableCustomers.Rows[i]["address_shipping"].ToString() },
+                        //    { "city",  dataTableCustomers.Rows[i]["city_shipping"].ToString() },
+                        //    { "post_code",  dataTableCustomers.Rows[i]["post_code_shipping"].ToString() },
+                        //    { "country",  dataTableCustomers.Rows[i]["country_shipping"].ToString() },
+                        //    { "email",  dataTableCustomers.Rows[i]["email_shipping"].ToString() }
+
+                        //};
+                        customerDto.shipping["first_name_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                        customerDto.shipping["last_name_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                        customerDto.shipping["company_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                        customerDto.shipping["address_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                        customerDto.shipping["city_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                        customerDto.shipping["post_code_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                        customerDto.shipping["country_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+                        customerDto.shipping["email_shipping"] = dataTableCustomers.Rows[i]["first_name_shipping"].ToString();
+
                     }
                     catch
                     {
@@ -389,7 +445,7 @@ namespace APIv1.Controllers
             dbConnection.openConnection();
 
             // enter customer into DB
-            dbConnection.SQLString = "UPDATE customers SET wp_user_id = @wp_user_id, first_name = @first_name, last_name = @Last_name, email = @email, phone = @phone, " +
+            dbConnection.SQLString = "UPDATE customers SET wp_user_id = @wp_user_id, first_name = @first_name, last_name = @Last_name, email = @email, phone_number = @phone, " +
                     "first_name_billing = @first_name_billing, last_name_billing = @Last_name_billing, company_billing = @company_billing, address_billing = @address_billing, city_billing = @city_billing, post_code_billing = @post_code_billing, country_billing = @country_billing, email_billing = @email_billing, " +
                     "first_name_shipping = @first_name_shipping, last_name_shipping = @Last_name_shipping, company_shipping = @company_shipping, address_shipping = @address_shipping, city_shipping = @city_shipping, post_code_shipping = @post_code_shipping, country_shipping = @country_shipping " +
                     "WHERE username = @username";
@@ -404,32 +460,48 @@ namespace APIv1.Controllers
             dbConnection.com.Parameters.AddWithValue("@email", customerDto.email);
             dbConnection.com.Parameters.AddWithValue("@phone", customerDto.phone);
 
-            dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
-            dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
-            dbConnection.com.Parameters.AddWithValue("@company_billing", customerDto.billing["company"]);
-            dbConnection.com.Parameters.AddWithValue("@address_billing", customerDto.billing["address_1"]);
-            dbConnection.com.Parameters.AddWithValue("@city_billing", customerDto.billing["city"]);
-            dbConnection.com.Parameters.AddWithValue("@post_code_billing", customerDto.billing["postcode"]);
-            dbConnection.com.Parameters.AddWithValue("@country_billing", customerDto.billing["country"]);
-            dbConnection.com.Parameters.AddWithValue("@email_billing", customerDto.billing["email"]);
+            try
+            {
+                dbConnection.com.Parameters.AddWithValue("@first_name_billing", customerDto.billing["first_name"]);
+                dbConnection.com.Parameters.AddWithValue("@last_name_billing", customerDto.billing["last_name"]);
+                dbConnection.com.Parameters.AddWithValue("@company_billing", customerDto.billing["company"]);
+                dbConnection.com.Parameters.AddWithValue("@address_billing", customerDto.billing["address_1"]);
+                dbConnection.com.Parameters.AddWithValue("@city_billing", customerDto.billing["city"]);
+                dbConnection.com.Parameters.AddWithValue("@post_code_billing", customerDto.billing["postcode"]);
+                dbConnection.com.Parameters.AddWithValue("@country_billing", customerDto.billing["country"]);
+                dbConnection.com.Parameters.AddWithValue("@email_billing", customerDto.billing["email"]);
+            }
+            catch 
+            {
 
-            dbConnection.com.Parameters.AddWithValue("@first_name_shipping", customerDto.shipping["first_name"]);
-            dbConnection.com.Parameters.AddWithValue("@last_name_shipping", customerDto.shipping["last_name"]);
-            dbConnection.com.Parameters.AddWithValue("@company_shipping", customerDto.shipping["company"]);
-            dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
-            dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
-            dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
-            dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
+                dbConnection.com.Parameters.AddWithValue("@billing", null);
+            }
+
+            try
+            {
+                dbConnection.com.Parameters.AddWithValue("@first_name_shipping", customerDto.shipping["first_name"]);
+                dbConnection.com.Parameters.AddWithValue("@last_name_shipping", customerDto.shipping["last_name"]);
+                dbConnection.com.Parameters.AddWithValue("@company_shipping", customerDto.shipping["company"]);
+                dbConnection.com.Parameters.AddWithValue("@address_shipping", customerDto.shipping["address_1"]);
+                dbConnection.com.Parameters.AddWithValue("@city_shipping", customerDto.shipping["city"]);
+                dbConnection.com.Parameters.AddWithValue("@post_code_shipping", customerDto.shipping["postcode"]);
+                dbConnection.com.Parameters.AddWithValue("@country_shipping", customerDto.shipping["country"]);
+            }
+            catch 
+            {
+
+                dbConnection.com.Parameters.AddWithValue("@shipping", null);
+            }
 
             //execute nonQuery and close connection
             try
             {
                 dbConnection.com.ExecuteNonQuery();
-                
+
             }
-            catch 
+            catch
             {
-                customerDto = null;               
+            customerDto = null;
             }
 
             dbConnection.com.Dispose();

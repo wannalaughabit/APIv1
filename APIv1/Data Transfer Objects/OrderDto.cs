@@ -16,13 +16,13 @@ namespace APIv1.Data_Transfer_Objects
         
 
         [JsonProperty("customer_id")]
-        public int wp_customer_id { get; set; }
+        public int? wp_customer_id { get; set; }
 
         [JsonProperty("total")]
-        public int total { get; set; }
+        public double total { get; set; }
 
         [JsonProperty("line_items")]
-        public Dictionary<string, string> line_items { get; set; }
+        public JArray line_items { get; set; }
 
         [JsonProperty("date_created")]
         public DateTime date { get; set; }
@@ -36,9 +36,9 @@ namespace APIv1.Data_Transfer_Objects
         {
             wp_order_id = (int?)json["id"];
             wp_customer_id = (int)json["customer_id"];
-            total= (int)json["total"];
+            total= (double)json["total"];
             date = (DateTime)json["date_created"];
-            line_items = json["billing"].ToObject<Dictionary<string, string>>();
+            line_items = json["line_items"].ToObject<JArray>();            
         }
 
     }
